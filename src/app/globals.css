@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #182019;
+  --primary: #176b3a;
+  --primary-dark: #0e4d2b;
+  --primary-soft: #e9f9ef;
+  --accent: #ef6a22;
+  --muted: #68726b;
+  --line: #e4e9e5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-muted-ink: var(--muted);
+  --color-line: var(--line);
+  --font-sans: var(--font-geist-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+a,
+input,
+select,
+textarea,
+summary {
+  transition: color 160ms ease, background-color 160ms ease,
+    border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+button,
+summary,
+select {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid rgba(23, 107, 58, 0.22);
+  outline-offset: 2px;
+}
+
+img {
+  display: block;
+}
+
+.container-shell {
+  width: min(100% - 40px, 1320px);
+  margin-inline: auto;
+}
+
+.page-pad {
+  padding-block: 48px 72px;
+}
+
+.surface-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(14, 77, 43, 0.03);
+}
+
+.soft-grid {
+  background-image: linear-gradient(rgba(23, 107, 58, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 107, 58, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .container-shell {
+    width: min(100% - 28px, 1320px);
+  }
+
+  .page-pad {
+    padding-block: 32px 52px;
+  }
+}

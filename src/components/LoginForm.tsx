@@ -1,0 +1,13 @@
+"use client";
+
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Icon } from "./Icon";
+
+export function LoginForm() {
+  const [show, setShow] = useState(false);
+  const router = useRouter();
+  const submit = (event: FormEvent) => { event.preventDefault(); router.push("/account"); };
+  return <div className="w-full max-w-md"><h1 className="text-3xl font-black tracking-tight">Welcome back</h1><p className="mt-2 text-sm text-muted-ink">Sign in to your SUPPY-MATRIX account</p><div className="mt-7 grid grid-cols-2 gap-3"><button className="rounded-xl border border-line py-3 text-sm font-semibold">◎ Google</button><button className="rounded-xl border border-line py-3 text-sm font-semibold">☎ Phone</button></div><div className="my-7 flex items-center gap-3 text-xs text-muted-ink"><span className="h-px flex-1 bg-line"/>or sign in with email<span className="h-px flex-1 bg-line"/></div><form onSubmit={submit}><label className="text-sm font-semibold">Email address<input required type="email" defaultValue="you@example.com" className="mt-2 h-12 w-full rounded-xl border border-line bg-[#f8faf9] px-4 font-normal outline-none focus:border-primary/50"/></label><div className="mt-5"><div className="flex justify-between text-sm"><label htmlFor="password" className="font-semibold">Password</label><button type="button" className="text-xs text-primary">Forgot password?</button></div><div className="mt-2 flex h-12 items-center rounded-xl border border-primary bg-[#f8faf9] px-4"><input required id="password" type={show ? "text" : "password"} defaultValue="password" className="min-w-0 flex-1 bg-transparent outline-none"/><button type="button" onClick={() => setShow(!show)} className="text-xs text-muted-ink">{show ? "Hide" : "Show"}</button></div></div><label className="mt-5 flex items-center gap-2 text-sm"><input type="checkbox" defaultChecked className="accent-primary"/>Keep me signed in</label><button className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-bold text-white hover:bg-primary-dark">Sign in <Icon name="arrowRight" size={16}/></button></form><div className="my-7 flex items-center gap-3 text-xs text-muted-ink"><span className="h-px flex-1 bg-line"/>New to SUPPY-MATRIX?<span className="h-px flex-1 bg-line"/></div><Link href="/account" className="block rounded-xl border border-line py-3 text-center text-sm font-semibold hover:border-primary/40">Create an account</Link><p className="mt-7 text-center text-[11px] text-muted-ink">By signing in you agree to our Terms of Service and Privacy Policy.</p></div>;
+}
