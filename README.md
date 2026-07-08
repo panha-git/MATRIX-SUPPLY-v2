@@ -1,6 +1,7 @@
 # MATRIX SUPPLY
 
-A localhost-only supplier marketplace built with Next.js App Router, React, TypeScript, Tailwind CSS, and browser `localStorage`.
+A browser-only supplier marketplace demo built with Next.js App Router, React,
+TypeScript, Tailwind CSS, `localStorage`, and `sessionStorage`.
 
 ## Run locally
 
@@ -9,19 +10,32 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Next.js, normally `http://localhost:3000`.
+Open `http://localhost:3000`.
 
-## Business model
+## Demo workflow
 
-- Suppliers create a business profile and publish products from their private dashboard.
-- Customers create a buyer profile and browse active products from all registered suppliers.
-- Supplier products include price, unit, stock, location, category, and active/inactive status.
-- Suppliers can edit, delete, activate, or deactivate only their own products.
-- Customers can search and filter active listings and open product details with supplier information.
-- Accounts, profiles, products, and the current session are stored only in this browser.
-- Logout removes only the current session; saved accounts and products remain after refresh.
+- Guests can open the home page, marketplace, supplier directory, product
+  details, and search/filter controls without an account.
+- Add to Cart and Request Quote open a customer login/register modal. After a
+  successful login, the original action continues automatically.
+- Customer accounts require Gmail, full name, and phone or Telegram. Their cart
+  is saved by customer ID and survives logout and refresh.
+- Suppliers submit products from `/dashboard`. New and edited products remain
+  pending until an admin approves them.
+- Only approved products appear in the public marketplace.
+- Customers submit order or quote requests; no payment is collected.
+- The admin reviews product submissions and customer requests at `/admin`.
 
-Accounts created by the earlier demo with the `seller` role are migrated locally to `supplier` when read. No seeded products or fake marketplace statistics are included.
+Admin demo login: `admin@gmail.com`
+
+Use **Seed Demo Data** in the admin dashboard to load two suppliers, three
+approved products, one pending product, one customer, and one order request.
+Use **Reset Demo Data** to remove MATRIX SUPPLY demo records from the browser.
+
+Shared demo data is stored in `localStorage`. The current login is stored in
+`sessionStorage`, so separate browser tabs can use different roles. No API,
+backend, SQL database, Firebase, Supabase, Prisma, Stripe, hosting, or online
+sync is included.
 
 ## Quality checks
 
@@ -30,5 +44,3 @@ npm run lint
 npx tsc --noEmit
 npm run build
 ```
-
-No API routes, backend, database, cloud authentication, or hosting integration is used.

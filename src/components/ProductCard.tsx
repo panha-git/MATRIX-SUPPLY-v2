@@ -1,14 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import type { Product } from "@/lib/localStorage";
 import { Icon } from "./Icon";
 
 export function ProductCard({
   product,
-  onView,
+  onAddToCart,
+  onRequestQuote,
 }: {
   product: Product;
-  onView: (product: Product) => void;
+  onAddToCart: (product: Product) => void;
+  onRequestQuote: (product: Product) => void;
 }) {
   const stockLabel =
     product.stockQuantity === 0
@@ -28,11 +31,6 @@ export function ProductCard({
       : product.stockQuantity <= 5
         ? "text-amber-700"
         : "text-primary",
-  ].join(" ");
-  const viewButtonClass = [
-    "mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg",
-    "bg-primary py-2.5 text-xs font-semibold text-white",
-    "hover:bg-primary-dark",
   ].join(" ");
 
   return (
@@ -72,11 +70,27 @@ export function ProductCard({
           <p className={stockClass}>● {stockLabel}</p>
           <button
             type="button"
-            onClick={() => onView(product)}
-            className={viewButtonClass}
+            disabled={product.stockQuantity === 0}
+            onClick={() => onAddToCart(product)}
+            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary py-2.5 text-xs font-semibold text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            View details <Icon name="arrowRight" size={14} />
+            <Icon name="cart" size={14} /> Add to cart
           </button>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => onRequestQuote(product)}
+              className="rounded-lg border border-line px-2 py-2 text-[11px] font-bold text-primary"
+            >
+              Request quote
+            </button>
+            <Link
+              href={`/products/${product.id}`}
+              className="rounded-lg border border-line px-2 py-2 text-center text-[11px] font-bold text-muted-ink"
+            >
+              View details
+            </Link>
+          </div>
         </div>
       </div>
     </article>

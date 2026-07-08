@@ -1,16 +1,18 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { categories } from "@/lib/data";
 import {
-  getActiveProducts,
+  addToCart,
+  getApprovedProducts,
   getSuppliers,
   PRODUCTS_CHANGED_EVENT,
   type Product,
   type SupplierAccount,
 } from "@/lib/localStorage";
 import { Icon } from "./Icon";
+import { useMarketplace } from "./MarketplaceProvider";
 import { ProductCard } from "./ProductCard";
 
 export function ProductsExplorer({
@@ -20,6 +22,8 @@ export function ProductsExplorer({
   initialSearch?: string;
   initialCategory?: string;
 }) {
+  const router = useRouter();
+  const { notify, requireCustomer } = useMarketplace();
   const [products, setProducts] = useState<Product[]>([]);
   const [suppliers, setSuppliers] = useState<SupplierAccount[]>([]);
   const [search, setSearch] = useState(initialSearch);
@@ -27,11 +31,10 @@ export function ProductsExplorer({
   const [location, setLocation] = useState("All Locations");
   const [sort, setSort] = useState("Newest");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [selected, setSelected] = useState<Product | null>(null);
 
   useEffect(() => {
     const sync = () => {
-      setProducts(getActiveProducts());
+      setProducts(getApprovedProducts());
       setSuppliers(getSuppliers());
     };
     sync();
@@ -70,18 +73,31 @@ export function ProductsExplorer({
     setSearch("");
   };
 
+  const addProduct = (product: Product) => {
+    requireCustomer((customer) => {
+      addToCart(customer.id, product);
+      notify(`${product.title} added to your cart`);
+    });
+  };
+
+  const requestQuote = (product: Product) => {
+    requireCustomer(() => {
+      router.push(`/checkout?mode=quote&productId=${product.id}`);
+    });
+  };
+
   return (
     <div id="catalog" className="container-shell page-pad scroll-mt-28">
       <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
         <div>
           <p className="mb-2 text-sm text-muted-ink">
-            Customer <span className="mx-2">›</span> Marketplace
+            Home <span className="mx-2">›</span> Marketplace
           </p>
           <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
             Supplier marketplace
           </h1>
           <p className="mt-2 text-sm text-muted-ink">
-            Browse active products posted by registered local suppliers.
+            Browse products approved by the MATRIX SUPPLY demo admin.
           </p>
         </div>
         <div className="flex gap-2">
@@ -168,7 +184,7 @@ export function ProductsExplorer({
             <p className="text-sm text-muted-ink">
               Showing{" "}
               <strong className="text-foreground">{visible.length}</strong>{" "}
-              active products
+              approved products
             </p>
           </div>
           {visible.length ? (
@@ -177,7 +193,8 @@ export function ProductsExplorer({
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onView={setSelected}
+                  onAddToCart={addProduct}
+                  onRequestQuote={requestQuote}
                 />
               ))}
             </div>
@@ -189,13 +206,6 @@ export function ProductsExplorer({
           )}
         </div>
       </div>
-      {selected && (
-        <ProductDetail
-          product={selected}
-          supplier={suppliers.find((item) => item.id === selected.supplierId)}
-          onClose={() => setSelected(null)}
-        />
-      )}
     </div>
   );
 }
@@ -214,7 +224,7 @@ function EmptyMarketplace({
       : "No products match your filters";
   const detail = hasProducts
     ? "Try another product name, category, or location."
-    : "Active supplier products will appear here when they are published.";
+    : "Approved supplier products will appear here after admin review.";
   return (
     <div className="grid min-h-[360px] place-items-center rounded-2xl border border-dashed border-line bg-[#fafbfa] px-6 text-center">
       <div>
@@ -230,100 +240,6 @@ function EmptyMarketplace({
   );
 }
 
-function ProductDetail({
-  product,
-  supplier,
-  onClose,
-}: {
-  product: Product;
-  supplier?: SupplierAccount;
-  onClose: () => void;
-}) {
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${product.title} details`}
-      className="fixed inset-0 z-[90] grid place-items-center bg-[#07150d]/65 p-4"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <article className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[24px] bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b border-line px-6 py-4">
-          <span className="text-sm font-bold">Product details</span>
-          <button
-            onClick={onClose}
-            aria-label="Close product details"
-            className="grid size-9 place-items-center rounded-full hover:bg-[#f3f5f3]"
-          >
-            <Icon name="close" />
-          </button>
-        </div>
-        <div className="grid gap-6 p-6 md:grid-cols-[280px_minmax(0,1fr)]">
-          <img
-            src={product.imageUrl || "/product-placeholder.svg"}
-            alt={product.title}
-            onError={(event) => {
-              event.currentTarget.src = "/product-placeholder.svg";
-            }}
-            className="aspect-[4/3] w-full rounded-2xl bg-primary-soft object-cover"
-          />
-          <div>
-            <span className="rounded bg-primary-soft px-2.5 py-1 text-xs font-semibold text-primary">
-              {product.category}
-            </span>
-            <h2 className="mt-3 text-2xl font-black">{product.title}</h2>
-            <div className="mt-3 flex items-baseline gap-2">
-              <strong className="text-2xl text-primary">
-                ${product.price.toFixed(2)}
-              </strong>
-              <span className="text-sm text-muted-ink">{product.unit}</span>
-            </div>
-            <p className="mt-4 text-sm leading-7 text-muted-ink">
-              {product.description}
-            </p>
-            <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
-              <Detail
-                label="Available stock"
-                value={`${product.stockQuantity}`}
-              />
-              <Detail label="Product location" value={product.location} />
-            </dl>
-            <section className="mt-6 rounded-2xl border border-line bg-[#f8faf9] p-4">
-              <h3 className="font-bold">Supplier information</h3>
-              <p className="mt-2 text-sm font-semibold text-primary-dark">
-                {product.supplierName}
-              </p>
-              <p className="mt-1 text-xs text-muted-ink">
-                {product.supplierGmail}
-              </p>
-              {supplier?.phoneNumber && (
-                <p className="mt-1 text-xs text-muted-ink">
-                  {supplier.phoneNumber}
-                </p>
-              )}
-              {supplier?.description && (
-                <p className="mt-3 text-sm leading-6 text-muted-ink">
-                  {supplier.description}
-                </p>
-              )}
-            </section>
-          </div>
-        </div>
-      </article>
-    </div>
-  );
-}
-
-function Detail({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-line p-3">
-      <dt className="text-xs text-muted-ink">{label}</dt>
-      <dd className="mt-1 font-semibold">{value}</dd>
-    </div>
-  );
-}
 function FilterButton({
   active,
   onClick,

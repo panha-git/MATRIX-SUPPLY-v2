@@ -25,7 +25,6 @@ type FormState = {
   imageUrl: string;
   category: string;
   location: string;
-  status: "active" | "inactive";
 };
 const makeEmptyForm = (location = ""): FormState => ({
   title: "",
@@ -36,7 +35,6 @@ const makeEmptyForm = (location = ""): FormState => ({
   imageUrl: "",
   category: categories[0].name,
   location,
-  status: "active",
 });
 
 const emptyProductsClass = [
@@ -67,8 +65,8 @@ export function SupplierDashboard() {
   }, [user]);
 
   if (!user || user.role !== "supplier") return null;
-  const activeCount = products.filter(
-    (product) => product.status === "active",
+  const approvedCount = products.filter(
+    (product) => product.status === "approved",
   ).length;
   const totalStock = products.reduce(
     (total, product) => total + product.stockQuantity,
@@ -95,7 +93,7 @@ export function SupplierDashboard() {
         notify(`${updated.title} updated`);
       } else {
         const created = createProduct(user, input);
-        notify(`${created.title} published`);
+        notify(`${created.title} submitted for admin review`);
       }
       resetForm();
     } catch (caught) {
@@ -118,7 +116,6 @@ export function SupplierDashboard() {
       imageUrl: product.imageUrl,
       category: product.category,
       location: product.location,
-      status: product.status,
     });
     setError("");
     document
@@ -134,12 +131,6 @@ export function SupplierDashboard() {
     }
   };
 
-  const toggleStatus = (product: Product) => {
-    const status = product.status === "active" ? "inactive" : "active";
-    if (updateProduct(product.id, user.id, { status }))
-      notify(`${product.title} is now ${status}`);
-  };
-
   return (
     <div className="bg-[#f8faf9]">
       <div className="container-shell page-pad">
@@ -149,11 +140,11 @@ export function SupplierDashboard() {
               Supplier dashboard
             </span>
             <h1 className="mt-4 text-4xl font-black tracking-tight">
-              Manage your supply listings
+              Submit products for review
             </h1>
             <p className="mt-2 text-sm text-muted-ink">
-              Only products owned by {user.businessName} appear in this private
-              dashboard.
+              Track every product submitted by {user.businessName}. Only admin-
+              approved products appear publicly.
             </p>
           </div>
           <a
@@ -178,7 +169,7 @@ export function SupplierDashboard() {
                   {user.location || "Location not provided"}
                 </p>
                 <p className="mt-1 text-sm text-muted-ink">
-                  {user.phoneNumber || "Phone not provided"}
+                  {user.phoneOrTelegram || "Contact not provided"}
                 </p>
               </div>
             </div>
@@ -195,7 +186,7 @@ export function SupplierDashboard() {
           </div>
           <div className="grid grid-cols-3 gap-3">
             <Stat value={String(products.length)} label="Total products" />
-            <Stat value={String(activeCount)} label="Active products" />
+            <Stat value={String(approvedCount)} label="Approved products" />
             <Stat value={String(totalStock)} label="Units in stock" />
           </div>
         </section>
@@ -204,8 +195,8 @@ export function SupplierDashboard() {
           <section id="my-products" className="scroll-mt-32">
             <h2 className="text-2xl font-bold">My products</h2>
             <p className="mt-1 text-sm text-muted-ink">
-              Edit, remove, or change the marketplace visibility of your
-              listings.
+              Pending, approved, and rejected statuses are controlled by the
+              demo admin.
             </p>
             {products.length ? (
               <div className="mt-5 space-y-4">
@@ -240,15 +231,7 @@ export function SupplierDashboard() {
                         {product.location}
                       </p>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 sm:grid-cols-1">
-                      <button
-                        onClick={() => toggleStatus(product)}
-                        className="rounded-lg border border-line px-3 py-2 text-xs font-bold text-muted-ink"
-                      >
-                        {product.status === "active"
-                          ? "Deactivate"
-                          : "Activate"}
-                      </button>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
                       <button
                         onClick={() => beginEdit(product)}
                         className="rounded-lg border border-line px-3 py-2 text-xs font-bold text-primary"
@@ -275,8 +258,7 @@ export function SupplierDashboard() {
                     You have not posted any products yet.
                   </h3>
                   <p className="mt-1 text-sm text-muted-ink">
-                    Add your first product to publish it in the customer
-                    marketplace.
+                    Submit your first product for admin approval.
                   </p>
                   <a
                     href="#product-form"
@@ -299,7 +281,7 @@ export function SupplierDashboard() {
                   {editingId ? "Edit product" : "Add a product"}
                 </h2>
                 <p className="mt-1 text-xs text-muted-ink">
-                  All marketplace information should be accurate.
+                  New and edited products return to pending review.
                 </p>
               </div>
               {editingId && (
@@ -409,22 +391,6 @@ export function SupplierDashboard() {
                   className="form-control"
                 />
               </Field>
-              <label className="flex items-center justify-between rounded-xl border border-line p-3 text-sm font-semibold">
-                Visible in marketplace
-                <select
-                  value={form.status}
-                  onChange={(event) =>
-                    setForm({
-                      ...form,
-                      status: event.target.value as FormState["status"],
-                    })
-                  }
-                  className="rounded-lg border border-line bg-white px-3 py-2 text-sm"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </label>
               {error && (
                 <p
                   role="alert"
@@ -435,7 +401,7 @@ export function SupplierDashboard() {
               )}
               <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-bold text-white">
                 <Icon name={editingId ? "check" : "plus"} size={16} />
-                {editingId ? "Save changes" : "Publish product"}
+                {editingId ? "Save and resubmit" : "Submit for approval"}
               </button>
             </form>
           </section>
@@ -471,8 +437,10 @@ function Field({
 function getStatusBadgeClass(status: Product["status"]) {
   return [
     "rounded px-2 py-1 text-[10px] font-bold",
-    status === "active"
+    status === "approved"
       ? "bg-primary-soft text-primary"
-      : "bg-slate-100 text-slate-600",
+      : status === "rejected"
+        ? "bg-red-50 text-red-700"
+        : "bg-amber-50 text-amber-700",
   ].join(" ");
 }

@@ -14,20 +14,26 @@ export function SiteFooter() {
           ["Add Product", "/dashboard#product-form"],
           ["Profile", "/account"],
         ]
-      : [
-          ["Marketplace", "/products"],
-          ["Browse Products", "/products#catalog"],
-          ["Supplier Directory", "/suppliers"],
-          ["Profile", "/account"],
-        ];
+      : user?.role === "admin"
+        ? [
+            ["Admin Dashboard", "/admin"],
+            ["Marketplace", "/products"],
+          ]
+        : [
+            ["Home", "/"],
+            ["Marketplace", "/products"],
+            ["Browse Products", "/products#catalog"],
+            ["Supplier Directory", "/suppliers"],
+            [user ? "Profile" : "Demo Login", user ? "/account" : "/login"],
+          ];
   return (
     <footer className="bg-[#151817] text-white">
       <div className="container-shell flex flex-col gap-8 py-10 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <Logo inverted />
           <p className="mt-4 max-w-md text-sm leading-6 text-white/50">
-            A local marketplace where registered suppliers publish products for
-            customers to discover.
+            A browser-only demo marketplace where supplier submissions are
+            reviewed before customers can request an order or quote.
           </p>
         </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-3">
@@ -44,7 +50,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-white/10">
         <div className="container-shell py-5 text-xs text-white/35">
-          © 2026 MATRIX SUPPLY · LocalStorage demo only
+          © 2026 MATRIX SUPPLY · Browser-only course demo · No online payment
         </div>
       </div>
     </footer>

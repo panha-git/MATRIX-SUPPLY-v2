@@ -27,7 +27,7 @@ export function SupplierCard({
           "This supplier has not added a business description yet."}
       </p>
       <div className="mt-auto border-t border-line pt-4 text-xs text-muted-ink">
-        <strong className="text-primary">{productCount}</strong> active{" "}
+        <strong className="text-primary">{productCount}</strong> approved{" "}
         {productCount === 1 ? "product" : "products"} · {supplier.gmail}
       </div>
     </article>

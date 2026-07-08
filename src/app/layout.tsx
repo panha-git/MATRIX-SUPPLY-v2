@@ -12,7 +12,7 @@ const geist = Geist({
 export const metadata: Metadata = {
   title: "MATRIX SUPPLY | Local Supplier Marketplace",
   description:
-    "A local marketplace where suppliers publish products for customers to discover.",
+    "A browser-only supplier marketplace demo with product approvals, customer carts, and order requests.",
 };
 
 export default function RootLayout({

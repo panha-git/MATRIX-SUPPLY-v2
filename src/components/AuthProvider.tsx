@@ -20,13 +20,10 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const customerOnlyRoutes = [
-  "/products",
-  "/suppliers",
-  "/promotions",
-  "/orders",
-];
+const customerOnlyRoutes = ["/cart", "/checkout"];
 const supplierOnlyRoutes = ["/dashboard"];
+const adminOnlyRoutes = ["/admin"];
+const signedInRoutes = ["/account"];
 
 function isWithin(pathname: string, routes: string[]) {
   return routes.some(
@@ -35,7 +32,31 @@ function isWithin(pathname: string, routes: string[]) {
 }
 
 export function homeForRole(role: UserRole) {
-  return role === "supplier" ? "/dashboard" : "/products";
+  if (role === "supplier") return "/dashboard";
+  if (role === "admin") return "/admin";
+  return "/products";
+}
+
+function getRedirect(pathname: string, user: LocalAccount | null) {
+  const protectedRoute = isWithin(pathname, [
+    ...customerOnlyRoutes,
+    ...supplierOnlyRoutes,
+    ...adminOnlyRoutes,
+    ...signedInRoutes,
+  ]);
+
+  if (!user) return protectedRoute ? "/login" : null;
+  if (pathname === "/login") return homeForRole(user.role);
+  if (isWithin(pathname, customerOnlyRoutes) && user.role !== "customer") {
+    return homeForRole(user.role);
+  }
+  if (isWithin(pathname, supplierOnlyRoutes) && user.role !== "supplier") {
+    return homeForRole(user.role);
+  }
+  if (isWithin(pathname, adminOnlyRoutes) && user.role !== "admin") {
+    return homeForRole(user.role);
+  }
+  return null;
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -54,30 +75,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  const redirectTo = user === undefined ? null : getRedirect(pathname, user);
+
   useEffect(() => {
-    if (user === undefined) return;
-
-    if (!user && pathname !== "/login") {
-      router.replace("/login");
-      return;
-    }
-
-    if (!user) return;
-    const home = homeForRole(user.role);
-    if (pathname === "/" || pathname === "/login") {
-      router.replace(home);
-    } else if (
-      user.role === "customer" &&
-      isWithin(pathname, supplierOnlyRoutes)
-    ) {
-      router.replace(home);
-    } else if (
-      user.role === "supplier" &&
-      isWithin(pathname, customerOnlyRoutes)
-    ) {
-      router.replace(home);
-    }
-  }, [pathname, router, user]);
+    if (redirectTo) router.replace(redirectTo);
+  }, [redirectTo, router]);
 
   const value = useMemo<AuthContextValue | null>(() => {
     if (user === undefined) return null;
@@ -91,23 +93,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       logout: () => {
         clearSession();
         setUser(null);
-        router.replace("/login");
+        router.push("/");
       },
     };
   }, [router, user]);
 
-  const isRedirecting =
-    user === undefined ||
-    (!user && pathname !== "/login") ||
-    Boolean(user && (pathname === "/" || pathname === "/login")) ||
-    Boolean(
-      user?.role === "customer" && isWithin(pathname, supplierOnlyRoutes),
-    ) ||
-    Boolean(
-      user?.role === "supplier" && isWithin(pathname, customerOnlyRoutes),
-    );
-
-  if (!value || isRedirecting) {
+  if (!value || redirectTo) {
     return (
       <main className="grid min-h-screen place-items-center bg-[#f7faf8]">
         <div className="text-center">

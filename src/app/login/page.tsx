@@ -18,17 +18,17 @@ export default function LoginPage() {
         </div>
         <div className="relative max-w-xl">
           <h2 className="text-5xl font-black leading-tight tracking-tight">
-            Local suppliers meet local customers.
+            One browser. Three demo roles.
           </h2>
           <p className="mt-5 max-w-lg leading-7 text-white/70">
-            Suppliers publish products from their business dashboard. Customers
-            browse active listings from every registered supplier.
+            Guests browse freely, suppliers submit products, and the demo admin
+            reviews products and customer requests.
           </p>
           <ul className="mt-8 space-y-4">
             {[
-              "Local supplier and customer profiles",
-              "Supplier-owned product listings",
-              "Products and sessions persist after refresh",
+              "Public marketplace browsing",
+              "Supplier product approval workflow",
+              "Customer carts and order requests",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3 text-sm">
                 <span className="grid size-8 place-items-center rounded-lg bg-white text-primary">
@@ -40,8 +40,8 @@ export default function LoginPage() {
           </ul>
         </div>
         <p className="relative border-t border-white/30 pt-7 text-sm text-white/65">
-          Everything runs locally in your browser. Logging out ends only the
-          current session and keeps saved accounts and products intact.
+          Everything runs locally in your browser. No API, payment system, or
+          online database is connected.
         </p>
       </section>
       <section className="flex items-center justify-center px-6 py-20 sm:px-12">
