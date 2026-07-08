@@ -11,7 +11,8 @@ const geist = Geist({
 
 export const metadata: Metadata = {
   title: "MATRIX SUPPLY | Local Supplier Marketplace",
-  description: "A local marketplace where suppliers publish products for customers to discover.",
+  description:
+    "A local marketplace where suppliers publish products for customers to discover.",
 };
 
 export default function RootLayout({

@@ -44,8 +44,12 @@ input,
 select,
 textarea,
 summary {
-  transition: color 160ms ease, background-color 160ms ease,
-    border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
 button,
@@ -106,7 +110,8 @@ textarea.form-control {
 }
 
 .soft-grid {
-  background-image: linear-gradient(rgba(23, 107, 58, 0.035) 1px, transparent 1px),
+  background-image:
+    linear-gradient(rgba(23, 107, 58, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(23, 107, 58, 0.035) 1px, transparent 1px);
   background-size: 28px 28px;
 }

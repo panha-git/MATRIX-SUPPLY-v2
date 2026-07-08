@@ -25,7 +25,10 @@ export type CustomerAccount = BaseAccount & {
 export type LocalAccount = SupplierAccount | CustomerAccount;
 
 export type RegistrationProfile =
-  | Pick<SupplierAccount, "role" | "businessName" | "phoneNumber" | "location" | "description">
+  | Pick<
+      SupplierAccount,
+      "role" | "businessName" | "phoneNumber" | "location" | "description"
+    >
   | Pick<CustomerAccount, "role" | "fullName" | "phoneNumber" | "location">;
 
 export type ProductStatus = "active" | "inactive";
@@ -94,13 +97,17 @@ function number(value: unknown, fallback = 0) {
 }
 
 function record(value: unknown): Record<string, unknown> | null {
-  return value && typeof value === "object" ? value as Record<string, unknown> : null;
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : null;
 }
 
 function makeId(prefix: string, existingIds: string[] = []) {
   let id = "";
   do {
-    const random = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const random =
+      globalThis.crypto?.randomUUID?.() ??
+      `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     id = `${prefix}_${random}`;
   } while (existingIds.includes(id));
   return id;
@@ -115,7 +122,9 @@ export function normalizeGmail(gmail: string) {
 }
 
 export function isValidGmail(gmail: string) {
-  return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail\.com$/i.test(normalizeGmail(gmail));
+  return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail\.com$/i.test(
+    normalizeGmail(gmail),
+  );
 }
 
 function normalizeAccount(value: unknown): LocalAccount | null {
@@ -155,11 +164,15 @@ function normalizeAccount(value: unknown): LocalAccount | null {
 }
 
 export function getUsers() {
-  return readArray(ACCOUNTS_KEY).map(normalizeAccount).filter((user): user is LocalAccount => Boolean(user));
+  return readArray(ACCOUNTS_KEY)
+    .map(normalizeAccount)
+    .filter((user): user is LocalAccount => Boolean(user));
 }
 
 export function getSuppliers() {
-  return getUsers().filter((user): user is SupplierAccount => user.role === "supplier");
+  return getUsers().filter(
+    (user): user is SupplierAccount => user.role === "supplier",
+  );
 }
 
 export function getAccountByGmail(gmail: string) {
@@ -170,13 +183,15 @@ export function getAccountByGmail(gmail: string) {
 export function getCurrentUser(): LocalAccount | null {
   if (!hasStorage()) return null;
   const userId = window.localStorage.getItem(SESSION_KEY);
-  return userId ? getUsers().find((account) => account.id === userId) ?? null : null;
+  return userId
+    ? (getUsers().find((account) => account.id === userId) ?? null)
+    : null;
 }
 
 export function saveUser<T extends LocalAccount>(user: T): T {
   const users = getUsers();
   const next = users.some((item) => item.id === user.id)
-    ? users.map((item) => item.id === user.id ? user : item)
+    ? users.map((item) => (item.id === user.id ? user : item))
     : [...users, user];
   writeArray(ACCOUNTS_KEY, next);
   emit(AUTH_CHANGED_EVENT);
@@ -185,17 +200,23 @@ export function saveUser<T extends LocalAccount>(user: T): T {
 
 function validateRegistration(profile: RegistrationProfile) {
   if (profile.role === "supplier") {
-    if (!profile.businessName.trim()) throw new Error("Business name is required.");
-    if (!profile.phoneNumber.trim()) throw new Error("Phone number is required.");
+    if (!profile.businessName.trim())
+      throw new Error("Business name is required.");
+    if (!profile.phoneNumber.trim())
+      throw new Error("Phone number is required.");
     if (!profile.location.trim()) throw new Error("Location is required.");
   } else if (!profile.fullName.trim()) {
     throw new Error("Full name is required.");
   }
 }
 
-export function loginOrCreateUser(gmail: string, profile?: RegistrationProfile) {
+export function loginOrCreateUser(
+  gmail: string,
+  profile?: RegistrationProfile,
+) {
   const normalized = normalizeGmail(gmail);
-  if (!isValidGmail(normalized)) throw new Error("Enter a valid email ending with @gmail.com.");
+  if (!isValidGmail(normalized))
+    throw new Error("Enter a valid email ending with @gmail.com.");
 
   const users = getUsers();
   let account = users.find((item) => item.gmail === normalized);
@@ -203,13 +224,30 @@ export function loginOrCreateUser(gmail: string, profile?: RegistrationProfile) 
     if (!profile) throw new Error("Choose a role and complete your profile.");
     validateRegistration(profile);
     const base = {
-      id: makeId("user", users.map((item) => item.id)),
+      id: makeId(
+        "user",
+        users.map((item) => item.id),
+      ),
       gmail: normalized,
       createdAt: new Date().toISOString(),
     };
-    account = profile.role === "supplier"
-      ? { ...base, ...profile, businessName: profile.businessName.trim(), phoneNumber: profile.phoneNumber.trim(), location: profile.location.trim(), description: profile.description.trim() }
-      : { ...base, ...profile, fullName: profile.fullName.trim(), phoneNumber: profile.phoneNumber?.trim() || undefined, location: profile.location?.trim() || undefined };
+    account =
+      profile.role === "supplier"
+        ? {
+            ...base,
+            ...profile,
+            businessName: profile.businessName.trim(),
+            phoneNumber: profile.phoneNumber.trim(),
+            location: profile.location.trim(),
+            description: profile.description.trim(),
+          }
+        : {
+            ...base,
+            ...profile,
+            fullName: profile.fullName.trim(),
+            phoneNumber: profile.phoneNumber?.trim() || undefined,
+            location: profile.location?.trim() || undefined,
+          };
     saveUser(account);
   }
 
@@ -224,7 +262,10 @@ export function logout() {
   emit(AUTH_CHANGED_EVENT);
 }
 
-function normalizeProduct(value: unknown, suppliers: SupplierAccount[]): Product | null {
+function normalizeProduct(
+  value: unknown,
+  suppliers: SupplierAccount[],
+): Product | null {
   const item = record(value);
   if (!item) return null;
   const id = text(item.id);
@@ -247,7 +288,10 @@ function normalizeProduct(value: unknown, suppliers: SupplierAccount[]): Product
     location: text(item.location, supplier.location || "Location not provided"),
     status: item.status === "inactive" ? "inactive" : "active",
     createdAt: text(item.createdAt, new Date().toISOString()),
-    updatedAt: text(item.updatedAt, text(item.createdAt, new Date().toISOString())),
+    updatedAt: text(
+      item.updatedAt,
+      text(item.createdAt, new Date().toISOString()),
+    ),
   };
 }
 
@@ -271,20 +315,32 @@ function validateProduct(input: ProductInput) {
   if (!input.title.trim()) throw new Error("Product title is required.");
   if (!input.description.trim()) throw new Error("Description is required.");
   if (!input.category.trim()) throw new Error("Category is required.");
-  if (!Number.isFinite(Number(input.price)) || Number(input.price) <= 0) throw new Error("Price must be greater than 0.");
+  if (!Number.isFinite(Number(input.price)) || Number(input.price) <= 0)
+    throw new Error("Price must be greater than 0.");
   if (!input.unit.trim()) throw new Error("Unit is required.");
-  if (!Number.isInteger(Number(input.stockQuantity)) || Number(input.stockQuantity) < 0) throw new Error("Stock quantity must be a whole number of 0 or more.");
+  if (
+    !Number.isInteger(Number(input.stockQuantity)) ||
+    Number(input.stockQuantity) < 0
+  )
+    throw new Error("Stock quantity must be a whole number of 0 or more.");
   if (!input.location.trim()) throw new Error("Product location is required.");
 }
 
-export function createProduct(supplier: SupplierAccount, input: ProductInput): Product {
+export function createProduct(
+  supplier: SupplierAccount,
+  input: ProductInput,
+): Product {
   const current = getCurrentUser();
-  if (!current || current.role !== "supplier" || current.id !== supplier.id) throw new Error("Only the logged-in supplier can create products.");
+  if (!current || current.role !== "supplier" || current.id !== supplier.id)
+    throw new Error("Only the logged-in supplier can create products.");
   validateProduct(input);
   const products = getProducts();
   const now = new Date().toISOString();
   const product: Product = {
-    id: makeId("product", products.map((item) => item.id)),
+    id: makeId(
+      "product",
+      products.map((item) => item.id),
+    ),
     supplierId: supplier.id,
     supplierName: supplier.businessName,
     supplierGmail: supplier.gmail,
@@ -305,9 +361,14 @@ export function createProduct(supplier: SupplierAccount, input: ProductInput): P
   return product;
 }
 
-export function updateProduct(productId: string, supplierId: string, updates: Partial<ProductInput>) {
+export function updateProduct(
+  productId: string,
+  supplierId: string,
+  updates: Partial<ProductInput>,
+) {
   const current = getCurrentUser();
-  if (!current || current.role !== "supplier" || current.id !== supplierId) return null;
+  if (!current || current.role !== "supplier" || current.id !== supplierId)
+    return null;
   const products = getProducts();
   const target = products.find((product) => product.id === productId);
   if (!target || target.supplierId !== supplierId) return null;
@@ -325,28 +386,39 @@ export function updateProduct(productId: string, supplierId: string, updates: Pa
     stockQuantity: Number(nextInput.stockQuantity),
     updatedAt: new Date().toISOString(),
   };
-  writeArray(PRODUCTS_KEY, products.map((product) => product.id === productId ? updated : product));
+  writeArray(
+    PRODUCTS_KEY,
+    products.map((product) => (product.id === productId ? updated : product)),
+  );
   emit(PRODUCTS_CHANGED_EVENT);
   return updated;
 }
 
 export function deleteProduct(productId: string, supplierId: string) {
   const current = getCurrentUser();
-  if (!current || current.role !== "supplier" || current.id !== supplierId) return false;
+  if (!current || current.role !== "supplier" || current.id !== supplierId)
+    return false;
   const products = getProducts();
   const target = products.find((product) => product.id === productId);
   if (!target || target.supplierId !== supplierId) return false;
-  writeArray(PRODUCTS_KEY, products.filter((product) => product.id !== productId));
+  writeArray(
+    PRODUCTS_KEY,
+    products.filter((product) => product.id !== productId),
+  );
   emit(PRODUCTS_CHANGED_EVENT);
   return true;
 }
 
 export function updateSupplierProfile(
   supplierId: string,
-  updates: Pick<SupplierAccount, "businessName" | "phoneNumber" | "location" | "description">,
+  updates: Pick<
+    SupplierAccount,
+    "businessName" | "phoneNumber" | "location" | "description"
+  >,
 ) {
   const current = getCurrentUser();
-  if (!current || current.role !== "supplier" || current.id !== supplierId) return null;
+  if (!current || current.role !== "supplier" || current.id !== supplierId)
+    return null;
   const supplier = getSuppliers().find((item) => item.id === supplierId);
   if (!supplier) return null;
   const profile: RegistrationProfile = { role: "supplier", ...updates };
@@ -358,9 +430,19 @@ export function updateSupplierProfile(
     location: updates.location.trim(),
     description: updates.description.trim(),
   });
-  const products = getProducts().map((product) => product.supplierId === supplierId
-    ? { ...product, supplierName: updated.businessName, location: product.location === supplier.location ? updated.location : product.location, updatedAt: new Date().toISOString() }
-    : product);
+  const products = getProducts().map((product) =>
+    product.supplierId === supplierId
+      ? {
+          ...product,
+          supplierName: updated.businessName,
+          location:
+            product.location === supplier.location
+              ? updated.location
+              : product.location,
+          updatedAt: new Date().toISOString(),
+        }
+      : product,
+  );
   writeArray(PRODUCTS_KEY, products);
   emit(PRODUCTS_CHANGED_EVENT);
   return updated;
@@ -371,8 +453,12 @@ export function updateCustomerProfile(
   updates: Pick<CustomerAccount, "fullName" | "phoneNumber" | "location">,
 ) {
   const current = getCurrentUser();
-  if (!current || current.role !== "customer" || current.id !== customerId) return null;
-  const customer = getUsers().find((item): item is CustomerAccount => item.id === customerId && item.role === "customer");
+  if (!current || current.role !== "customer" || current.id !== customerId)
+    return null;
+  const customer = getUsers().find(
+    (item): item is CustomerAccount =>
+      item.id === customerId && item.role === "customer",
+  );
   if (!customer || !updates.fullName.trim()) return null;
   return saveUser({
     ...customer,

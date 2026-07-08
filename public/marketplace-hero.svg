@@ -1,42 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title description">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1200 900"
+  role="img"
+  aria-labelledby="title description"
+>
   <title id="title">Fresh local marketplace illustration</title>
-  <desc id="description">Abstract baskets of colorful produce on a deep green market background.</desc>
+  <desc id="description">
+    Abstract baskets of colorful produce on a deep green market background.
+  </desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0e4d2b"/>
-      <stop offset="1" stop-color="#082f1e"/>
+      <stop offset="0" stop-color="#0e4d2b" />
+      <stop offset="1" stop-color="#082f1e" />
     </linearGradient>
     <radialGradient id="light">
-      <stop offset="0" stop-color="#8ee4aa" stop-opacity=".32"/>
-      <stop offset="1" stop-color="#8ee4aa" stop-opacity="0"/>
+      <stop offset="0" stop-color="#8ee4aa" stop-opacity=".32" />
+      <stop offset="1" stop-color="#8ee4aa" stop-opacity="0" />
     </radialGradient>
   </defs>
-  <rect width="1200" height="900" fill="url(#background)"/>
-  <circle cx="960" cy="140" r="440" fill="url(#light)"/>
-  <circle cx="150" cy="760" r="390" fill="url(#light)"/>
+  <rect width="1200" height="900" fill="url(#background)" />
+  <circle cx="960" cy="140" r="440" fill="url(#light)" />
+  <circle cx="150" cy="760" r="390" fill="url(#light)" />
   <g opacity=".15" stroke="#fff" stroke-width="2">
-    <path d="M0 180h1200M0 360h1200M0 540h1200M0 720h1200"/>
-    <path d="M200 0v900M400 0v900M600 0v900M800 0v900M1000 0v900"/>
+    <path d="M0 180h1200M0 360h1200M0 540h1200M0 720h1200" />
+    <path d="M200 0v900M400 0v900M600 0v900M800 0v900M1000 0v900" />
   </g>
   <g transform="translate(300 165)">
-    <path d="M80 245h440l-55 330H135Z" fill="#c47a35"/>
-    <path d="M105 280h390M95 350h390M85 420h390M75 490h390" stroke="#8f5224" stroke-width="18"/>
-    <path d="M170 245c20-170 260-170 280 0" fill="none" stroke="#e0a66d" stroke-width="30"/>
+    <path d="M80 245h440l-55 330H135Z" fill="#c47a35" />
+    <path
+      d="M105 280h390M95 350h390M85 420h390M75 490h390"
+      stroke="#8f5224"
+      stroke-width="18"
+    />
+    <path
+      d="M170 245c20-170 260-170 280 0"
+      fill="none"
+      stroke="#e0a66d"
+      stroke-width="30"
+    />
     <g stroke="#f5f7e9" stroke-width="10">
-      <circle cx="165" cy="240" r="70" fill="#ef6a22"/>
-      <circle cx="285" cy="205" r="78" fill="#f3bc3f"/>
-      <circle cx="415" cy="245" r="72" fill="#d73f38"/>
-      <circle cx="240" cy="300" r="70" fill="#77b942"/>
-      <circle cx="365" cy="315" r="76" fill="#ee8f2d"/>
+      <circle cx="165" cy="240" r="70" fill="#ef6a22" />
+      <circle cx="285" cy="205" r="78" fill="#f3bc3f" />
+      <circle cx="415" cy="245" r="72" fill="#d73f38" />
+      <circle cx="240" cy="300" r="70" fill="#77b942" />
+      <circle cx="365" cy="315" r="76" fill="#ee8f2d" />
     </g>
     <g fill="#176b3a">
-      <path d="M145 175c-40-68-4-114 64-107-5 65-26 102-64 107Z"/>
-      <path d="M394 177c23-78 75-91 125-46-39 51-77 69-125 46Z"/>
-      <path d="M268 126c-10-77 36-109 99-83-21 59-52 87-99 83Z"/>
+      <path d="M145 175c-40-68-4-114 64-107-5 65-26 102-64 107Z" />
+      <path d="M394 177c23-78 75-91 125-46-39 51-77 69-125 46Z" />
+      <path d="M268 126c-10-77 36-109 99-83-21 59-52 87-99 83Z" />
     </g>
   </g>
-  <g fill="#fff" opacity=".7" font-family="Arial, sans-serif" text-anchor="middle">
-    <text x="600" y="790" font-size="42" font-weight="700">LOCAL SUPPLIERS · USEFUL PRODUCTS</text>
+  <g
+    fill="#fff"
+    opacity=".7"
+    font-family="Arial, sans-serif"
+    text-anchor="middle"
+  >
+    <text x="600" y="790" font-size="42" font-weight="700">
+      LOCAL SUPPLIERS · USEFUL PRODUCTS
+    </text>
     <text x="600" y="840" font-size="24">MATRIX SUPPLY</text>
   </g>
 </svg>
