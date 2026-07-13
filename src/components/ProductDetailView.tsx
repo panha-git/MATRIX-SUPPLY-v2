@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   addToCart,
+  createReport,
   getProductById,
   getSuppliers,
   PRODUCTS_CHANGED_EVENT,
   type Product,
   type SupplierAccount,
+  startChat,
 } from "@/lib/localStorage";
 import { Icon } from "./Icon";
 import { useMarketplace } from "./MarketplaceProvider";
@@ -42,7 +44,7 @@ export function ProductDetailView({ productId }: { productId: string }) {
   }, [productId]);
 
   if (product === undefined) {
-    return <div className="container-shell page-pad">Loading product…</div>;
+    return <div className="container-shell page-pad"><div className="loading-state"><i/><p>Loading product information…</p></div></div>;
   }
 
   if (!product) {
@@ -70,10 +72,17 @@ export function ProductDetailView({ productId }: { productId: string }) {
   };
 
   const requestQuote = () => {
-    requireCustomer(() => {
-      router.push(`/checkout?mode=quote&productId=${product.id}`);
+    requireCustomer((customer) => {
+      router.push(`/chat?room=${startChat(customer, product).id}`);
     });
   };
+
+  const reportProduct = () => requireCustomer((customer) => {
+    const reason = window.prompt("Please enter your report reason.");
+    if (!reason) return;
+    createReport({ reporterId: customer.id, reporterName: customer.fullName, targetType: "product", targetId: product.id, reason });
+    notify("Report submitted to marketplace safety");
+  });
 
   return (
     <div className="container-shell page-pad">
@@ -81,19 +90,17 @@ export function ProductDetailView({ productId }: { productId: string }) {
         <Link href="/products">Marketplace</Link>{" "}
         <span className="mx-2">›</span> {product.title}
       </p>
-      <article className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)]">
+      <article className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,.95fr)_minmax(0,1.05fr)]">
         <img
           src={product.imageUrl || "/product-placeholder.svg"}
           alt={product.title}
           onError={(event) => {
             event.currentTarget.src = "/product-placeholder.svg";
           }}
-          className="aspect-[4/3] w-full rounded-[24px] border border-line bg-primary-soft object-cover"
+          className="aspect-[4/3] w-full rounded-[28px] border border-line bg-white object-cover shadow-[0_16px_40px_rgba(17,43,74,.08)]"
         />
         <div>
-          <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-bold text-primary">
-            {product.category}
-          </span>
+          <div className="flex flex-wrap gap-2"><span className="badge">{product.category}</span><span className="verified-badge">✓ Verified Cambodian Supplier</span></div>
           <h1 className="mt-4 text-3xl font-black sm:text-4xl">
             {product.title}
           </h1>
@@ -101,7 +108,7 @@ export function ProductDetailView({ productId }: { productId: string }) {
             Supplied by {product.supplierName}
           </p>
           <div className="mt-5 flex items-baseline gap-2">
-            <strong className="text-3xl text-primary">
+            <strong className="text-4xl text-primary">
               ${product.price.toFixed(2)}
             </strong>
             <span className="text-sm text-muted-ink">{product.unit}</span>
@@ -120,17 +127,18 @@ export function ProductDetailView({ productId }: { productId: string }) {
             <button
               onClick={addProduct}
               disabled={product.stockQuantity === 0}
-              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-sm font-bold text-white disabled:bg-slate-300"
+              className="primary-btn py-3.5 disabled:bg-slate-300"
             >
               <Icon name="cart" size={17} /> Add to cart
             </button>
             <button
               onClick={requestQuote}
-              className="rounded-xl border border-primary/25 px-5 py-3.5 text-sm font-bold text-primary"
+              className="secondary-btn py-3.5"
             >
-              Request quote
+              Chat with Supplier
             </button>
           </div>
+          <button onClick={reportProduct} className="mt-4 text-xs font-semibold text-slate-400 hover:text-red-600">Report Product</button>
           <section className="mt-7 rounded-2xl border border-line bg-[#f8faf9] p-5">
             <h2 className="font-bold">Supplier information</h2>
             <p className="mt-2 text-sm font-semibold text-primary-dark">

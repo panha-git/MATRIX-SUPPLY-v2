@@ -48,17 +48,15 @@ export function CartView() {
 
   return (
     <div className="container-shell page-pad">
-      <p className="text-sm text-muted-ink">
-        Marketplace <span className="mx-2">›</span> Cart
-      </p>
-      <h1 className="mt-3 text-3xl font-black sm:text-4xl">Your cart</h1>
+      <span className="eyebrow">Order Planning</span>
+      <h1 className="mt-3 text-3xl font-black text-primary sm:text-4xl">Your Cart</h1>
       <p className="mt-2 text-sm text-muted-ink">
         Review quantities before submitting an order request. No payment is
         collected.
       </p>
 
       {!items.length ? (
-        <div className="mt-8 grid min-h-[340px] place-items-center rounded-2xl border border-dashed border-line bg-[#fafbfa] px-6 text-center">
+        <div className="empty-state mt-8">
           <div>
             <span className="mx-auto grid size-14 place-items-center rounded-full bg-primary-soft text-primary">
               <Icon name="cart" />
@@ -147,13 +145,12 @@ export function CartView() {
             </div>
             <Link
               href="/checkout"
-              className="block rounded-xl bg-primary px-5 py-3.5 text-center text-sm font-bold text-white"
+            className="primary-btn block py-3.5 text-center"
             >
               Continue to order request
             </Link>
             <p className="mt-3 text-center text-[11px] leading-5 text-muted-ink">
-              This is not a payment. Admin will review your request and contact
-              you.
+              This submits an order request directly to each supplier. No online payment is collected.
             </p>
           </aside>
         </div>

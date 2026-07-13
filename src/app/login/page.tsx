@@ -6,19 +6,19 @@ import { Logo } from "@/components/Logo";
 export default function LoginPage() {
   return (
     <main className="grid min-h-screen lg:grid-cols-2">
-      <section className="relative hidden overflow-hidden bg-primary-dark p-12 text-white lg:flex lg:flex-col lg:justify-between">
+      <section className="relative hidden overflow-hidden bg-primary p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <img
           src="/marketplace-hero.svg"
           alt="Illustrated baskets of fresh local produce"
           className="absolute inset-0 size-full object-cover opacity-40"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a5a34]/85 to-[#0b376f]/75" />
+        <div className="absolute inset-0 bg-primary/90" />
         <div className="relative">
           <Logo inverted />
         </div>
         <div className="relative max-w-xl">
           <h2 className="text-5xl font-black leading-tight tracking-tight">
-            Cambodia’s trusted supplier network.
+            Built for trusted Cambodian trade.
           </h2>
           <p className="mt-5 max-w-lg leading-7 text-white/70">
             Guests browse freely. Verified customers order and chat, while
