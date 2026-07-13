@@ -24,7 +24,7 @@ export function ProductDetailView({ productId }: { productId: string }) {
   useEffect(() => {
     const sync = () => {
       const found = getProductById(productId);
-      const visible = found?.status === "approved" ? found : null;
+      const visible = found?.status === "active" ? found : null;
       setProduct(visible);
       setSupplier(
         visible
@@ -50,7 +50,7 @@ export function ProductDetailView({ productId }: { productId: string }) {
       <div className="container-shell page-pad text-center">
         <h1 className="text-3xl font-black">Product not available</h1>
         <p className="mt-3 text-muted-ink">
-          It may be pending admin approval or no longer available.
+          It may be inactive or no longer available.
         </p>
         <Link
           href="/products"
@@ -114,7 +114,7 @@ export function ProductDetailView({ productId }: { productId: string }) {
               label="Stock quantity"
               value={String(product.stockQuantity)}
             />
-            <Detail label="Location" value={product.location} />
+            <Detail label="Location" value={product.province} />
           </dl>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <button

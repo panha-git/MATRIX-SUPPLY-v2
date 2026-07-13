@@ -8,10 +8,14 @@ export function ProductCard({
   product,
   onAddToCart,
   onRequestQuote,
+  onChat,
+  onReport,
 }: {
   product: Product;
   onAddToCart: (product: Product) => void;
   onRequestQuote: (product: Product) => void;
+  onChat?: (product: Product) => void;
+  onReport?: (product: Product) => void;
 }) {
   const stockLabel =
     product.stockQuantity === 0
@@ -56,9 +60,10 @@ export function ProductCard({
         <p className="mt-2 truncate text-xs font-semibold text-primary-dark">
           {product.supplierName}
         </p>
+        <p className="mt-1 text-[11px] font-bold text-primary">✓ Verified Supplier</p>
         <p className="mt-1 flex items-center gap-1 text-xs text-muted-ink">
           <Icon name="mapPin" size={12} />
-          {product.location}
+          {product.province}
         </p>
         <div className="mt-auto pt-5">
           <div className="flex items-baseline gap-1">
@@ -79,10 +84,10 @@ export function ProductCard({
           <div className="mt-2 grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => onRequestQuote(product)}
+              onClick={() => (onChat ? onChat(product) : onRequestQuote(product))}
               className="rounded-lg border border-line px-2 py-2 text-[11px] font-bold text-primary"
             >
-              Request quote
+              Chat Supplier
             </button>
             <Link
               href={`/products/${product.id}`}
@@ -91,6 +96,7 @@ export function ProductCard({
               View details
             </Link>
           </div>
+          {onReport&&<button type="button" onClick={()=>onReport(product)} className="mt-2 w-full text-[11px] font-semibold text-red-600">Report Product</button>}
         </div>
       </div>
     </article>

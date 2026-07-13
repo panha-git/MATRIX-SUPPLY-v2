@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const customerOnlyRoutes = ["/cart", "/checkout"];
 const supplierOnlyRoutes = ["/dashboard"];
 const adminOnlyRoutes = ["/admin"];
-const signedInRoutes = ["/account"];
+const signedInRoutes = ["/account", "/orders", "/chat", "/notifications"];
 
 function isWithin(pathname: string, routes: string[]) {
   return routes.some(

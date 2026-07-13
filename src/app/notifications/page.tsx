@@ -1,0 +1,1 @@
+import {PageShell} from "@/components/PageShell";import {NotificationsView} from "@/components/NotificationsView";export default function NotificationsPage(){return <PageShell><NotificationsView/></PageShell>}

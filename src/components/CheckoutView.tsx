@@ -30,7 +30,7 @@ export function CheckoutView({
   const items = useMemo(() => {
     if (mode === "order") return cartItems;
     const product = productId ? getProductById(productId) : null;
-    if (!product || product.status !== "approved") return [];
+    if (!product || product.status !== "active") return [];
     return [
       {
         productId: product.id,
@@ -131,7 +131,7 @@ export function CheckoutView({
           <div className="mt-6 grid gap-5 sm:grid-cols-2">
             <ReadOnly label="Customer name" value={user.fullName} />
             <ReadOnly label="Gmail" value={user.gmail} />
-            <ReadOnly label="Phone or Telegram" value={user.phoneOrTelegram} />
+            <ReadOnly label="Phone" value={user.phoneNumber} />
             <label className="block text-sm font-semibold">
               Delivery location *
               <input

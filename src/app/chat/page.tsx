@@ -1,0 +1,1 @@
+import {Suspense} from "react";import {PageShell} from "@/components/PageShell";import {ChatView} from "@/components/ChatView";export default function ChatPage(){return <PageShell><Suspense><ChatView/></Suspense></PageShell>}

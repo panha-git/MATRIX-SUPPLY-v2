@@ -18,16 +18,16 @@ export default function LoginPage() {
         </div>
         <div className="relative max-w-xl">
           <h2 className="text-5xl font-black leading-tight tracking-tight">
-            One browser. Three demo roles.
+            Cambodia’s trusted supplier network.
           </h2>
           <p className="mt-5 max-w-lg leading-7 text-white/70">
-            Guests browse freely, suppliers submit products, and the demo admin
-            reviews products and customer requests.
+            Guests browse freely. Verified customers order and chat, while
+            verified suppliers manage products and fulfillment directly.
           </p>
           <ul className="mt-8 space-y-4">
             {[
               "Public marketplace browsing",
-              "Supplier product approval workflow",
+              "Verified supplier product listings",
               "Customer carts and order requests",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3 text-sm">
