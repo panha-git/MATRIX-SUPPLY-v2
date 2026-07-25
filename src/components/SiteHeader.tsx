@@ -12,7 +12,7 @@ const guestLinks = [
   ["Search", "/products"],
   ["Cart", "/cart"],
   ["Chat", "/chat"],
-  ["Alerts", "/notifications"],
+  ["Notifications", "/notifications"],
 ];
 
 export function SiteHeader() {
@@ -40,7 +40,7 @@ export function SiteHeader() {
   const links = !user
     ? guestLinks
     : user.role === "customer"
-      ? [["Search", "/products"], ["Cart", "/cart"], ["Chat", "/chat"], ["Alerts", "/notifications"]]
+      ? [["Search", "/products"], ["Cart", "/cart"], ["Chat", "/chat"], ["Notifications", "/notifications"]]
       : [["Dashboard", "/dashboard"], ["Orders", "/orders"], ["Chat", "/chat"]];
 
   const active = (href: string) => href !== "/" && !href.includes("#") && (pathname === href || pathname.startsWith(`${href}/`));
