@@ -52,13 +52,6 @@ export function SiteHeader() {
           <Logo />
         </Link>
 
-        <div className="ml-2 flex flex-1 items-center gap-2 rounded-full border border-line bg-surface-muted px-3 py-2 shadow-sm">
-          <Icon name="search" size={16} />
-          <Link href="/products" className="flex-1 text-sm text-muted-ink">
-            Search products, suppliers, categories
-          </Link>
-        </div>
-
         <nav className="ml-auto hidden items-center gap-1 xl:flex">
           {links.map(([label, href]) => (
             <Link
@@ -73,6 +66,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 xl:ml-2">
+          <Link
+            href="/products"
+            className="flex size-10 items-center justify-center rounded-full border border-line bg-surface text-primary shadow-sm hover:bg-primary-soft sm:size-auto sm:gap-2 sm:px-3 sm:py-2 sm:text-xs sm:font-bold xl:hidden"
+            aria-label="Search products"
+          >
+            <Icon name="search" size={15} />
+            <span className="hidden sm:inline">Products</span>
+          </Link>
           <ThemeToggle />
           {user ? (
             <>

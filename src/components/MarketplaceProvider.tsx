@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import type { CustomerAccount } from "@/lib/localStorage";
 import { useAuth } from "./AuthProvider";
@@ -24,8 +23,6 @@ const NOTIFICATION_EXIT_DURATION = 180;
 export function MarketplaceProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [notification, setNotification] = useState<FloatingNotification | null>(null);
-  const [open, setOpen] = useState(false);
-  const pending = useRef<((customer: CustomerAccount) => void) | null>(null);
   const notificationId = useRef(0);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const removeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -65,8 +62,7 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
           return;
         }
 
-        pending.current = action;
-        setOpen(true);
+        notify("Please sign in or create an account before using cart, chat, quotes, or reports.");
       },
     }),
     [user, notify],
@@ -76,49 +72,21 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
     <Context.Provider value={value}>
       {children}
 
-      {open && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-[100] grid place-items-center bg-[#071225]/75 p-4"
-          onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
-        >
-          <section className="w-full max-w-md rounded-3xl bg-surface p-7 shadow-2xl">
-            <span className="eyebrow">Verified Account Required</span>
-            <h2 className="mt-4 text-2xl font-black">Continue securely</h2>
-            <p className="mt-2 text-sm leading-6 text-muted-ink">
-              Register or log in before adding products, ordering, chatting, or submitting a marketplace report.
-            </p>
-            <div className="mt-6 grid gap-3">
-              <Link href="/login" className="primary-btn" onClick={() => setOpen(false)}>
-                Secure Registration or Login
-              </Link>
-              <button onClick={() => setOpen(false)} className="secondary-btn">
-                Continue Browsing
-              </button>
-            </div>
-            <p className="mt-5 text-xs leading-5 text-muted-ink">
-              Customers must complete verified registration before ordering or chatting.
-            </p>
-          </section>
-        </div>
-      )}
-
-      <div className="pointer-events-none fixed right-4 top-24 z-[120] flex w-[min(420px,calc(100vw-2rem))] justify-end sm:right-6">
+      <div className="pointer-events-none fixed right-3 top-20 z-[120] flex w-[min(360px,calc(100vw-1.5rem))] justify-end sm:right-6 sm:top-24">
         {notification && (
           <section
             key={notification.id}
             role="status"
             aria-live="polite"
             aria-atomic="true"
-            className={`pointer-events-auto flex w-full items-start gap-3 rounded-2xl border border-line border-l-4 border-l-primary bg-surface p-4 text-foreground shadow-2xl transition duration-200 ${
+            className={`pointer-events-auto flex w-full items-start gap-2.5 rounded-xl border border-line border-l-4 border-l-primary bg-surface px-3.5 py-3 text-foreground shadow-2xl transition duration-200 sm:gap-3 sm:p-4 ${
               notification.leaving ? "translate-y-[-6px] opacity-0" : "translate-y-0 opacity-100"
             }`}
           >
-            <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft text-primary">
-              <Icon name="bell" size={16} />
+            <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-primary-soft text-primary sm:size-8">
+              <Icon name="bell" size={15} />
             </span>
-            <p className="flex-1 text-sm font-semibold leading-6">{notification.message}</p>
+            <p className="flex-1 text-xs font-semibold leading-5 sm:text-sm sm:leading-6">{notification.message}</p>
             <button
               type="button"
               onClick={dismissNotification}
