@@ -4,39 +4,39 @@ export function Logo({ inverted = false }: { inverted?: boolean }) {
   return (
     <Link
       href="/"
-      className="flex shrink-0 items-center gap-2.5"
+      className="flex shrink-0 items-center gap-3"
       aria-label="NEXXA home"
     >
-      <span className="grid size-10 place-items-center">
-        <svg viewBox="0 0 48 48" aria-hidden="true" className="size-10">
+      <span className={`grid size-10 place-items-center rounded-xl ${inverted ? "bg-white/10 text-white ring-1 ring-white/20" : "bg-primary-soft text-primary"}`}>
+        <svg viewBox="0 0 48 48" aria-hidden="true" className="size-8">
           <path
-            d="M24 3.5 41.8 13.8v20.4L24 44.5 6.2 34.2V13.8Z"
+            d="M24 4.8 40.7 14.4v19.2L24 43.2 7.3 33.6V14.4Z"
             fill="none"
-            stroke={inverted ? "#ffffff" : "#2563eb"}
-            strokeWidth="4"
+            stroke="currentColor"
+            strokeWidth="3.5"
             strokeLinejoin="round"
           />
           <path
-            d="M15.2 30.8V16.5L32.8 27.7V17.2"
+            d="M16 31.2V16.8l16 10.3V16.8"
             fill="none"
-            stroke={inverted ? "#ffffff" : "#2563eb"}
-            strokeWidth="4.4"
+            stroke="currentColor"
+            strokeWidth="4.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
-            d="M15.2 17.1 32.8 28.3"
+            d="M16 17.2 32 27.4"
             fill="none"
-            stroke={inverted ? "#ffffff" : "#0f172a"}
-            strokeWidth="2.8"
+            stroke="currentColor"
+            strokeWidth="2.2"
             strokeLinecap="round"
-            opacity={inverted ? 0.45 : 0.18}
+            opacity={0.22}
           />
         </svg>
       </span>
       <span className="leading-none">
         <span
-          className={`block text-[17px] font-black tracking-[0.28em] ${inverted ? "text-white" : "text-primary-dark"}`}
+          className={`block text-[17px] font-black tracking-[0.26em] ${inverted ? "text-white" : "text-foreground"}`}
         >
           NEXXA
         </span>

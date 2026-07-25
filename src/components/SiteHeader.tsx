@@ -7,13 +7,9 @@ import { useAuth } from "./AuthProvider";
 import { Logo } from "./Logo";
 import { Icon } from "./Icon";
 import { ThemeToggle } from "./ThemeToggle";
+import { NotificationPopover } from "./NotificationPopover";
 
-const guestLinks = [
-  ["Search", "/products"],
-  ["Cart", "/cart"],
-  ["Chat", "/chat"],
-  ["Notifications", "/notifications"],
-];
+const guestLinks = [["Search", "/products"], ["Cart", "/cart"], ["Chat", "/chat"]];
 
 export function SiteHeader() {
   const { user, logout } = useAuth();
@@ -21,13 +17,17 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [noticeOpen, setNoticeOpen] = useState(false);
   const [counts, setCounts] = useState({ cart: 0, notifications: 0 });
+  const [notifications, setNotifications] = useState<ReturnType<typeof getNotifications>>([]);
 
   useEffect(() => {
-    const sync = () =>
+    const sync = () => {
+      const nextNotifications = user ? getNotifications(user.id) : [];
+      setNotifications(nextNotifications);
       setCounts({
         cart: user?.role === "customer" ? getCart(user.id).items.reduce((n, x) => n + x.quantity, 0) : 0,
-        notifications: user ? getNotifications(user.id).filter((n) => !n.read).length : 0,
+        notifications: nextNotifications.filter((n) => !n.read).length,
       });
+    };
     sync();
     window.addEventListener(PLATFORM_CHANGED_EVENT, sync);
     window.addEventListener("storage", sync);
@@ -40,7 +40,7 @@ export function SiteHeader() {
   const links = !user
     ? guestLinks
     : user.role === "customer"
-      ? [["Search", "/products"], ["Cart", "/cart"], ["Chat", "/chat"], ["Notifications", "/notifications"]]
+      ? [["Search", "/products"], ["Cart", "/cart"], ["Chat", "/chat"]]
       : [["Dashboard", "/dashboard"], ["Orders", "/orders"], ["Chat", "/chat"]];
 
   const active = (href: string) => href !== "/" && !href.includes("#") && (pathname === href || pathname.startsWith(`${href}/`));
@@ -91,18 +91,7 @@ export function SiteHeader() {
                   )}
                 </button>
                 {noticeOpen && (
-                  <div className="absolute right-0 top-12 w-72 rounded-2xl border border-line bg-surface p-3 shadow-2xl">
-                    <p className="px-2 py-2 text-sm font-bold">Notifications</p>
-                    {getNotifications(user.id).slice(0, 3).map((n) => (
-                      <Link key={n.id} href={n.link || "/notifications"} onClick={() => setNoticeOpen(false)} className="block rounded-xl px-3 py-2.5 hover:bg-primary-soft">
-                        <strong className="block text-xs">{n.title}</strong>
-                        <span className="mt-1 line-clamp-2 text-[11px] text-muted-ink">{n.message}</span>
-                      </Link>
-                    ))}
-                    <Link href="/notifications" className="mt-2 block rounded-xl bg-primary-soft px-3 py-2 text-center text-xs font-bold text-primary">
-                      View all notifications
-                    </Link>
-                  </div>
+                  <NotificationPopover items={notifications} open={noticeOpen} onClose={() => setNoticeOpen(false)} />
                 )}
               </div>
               <Link href="/account" className="hidden size-10 place-items-center rounded-full bg-primary text-xs font-bold text-white sm:grid">
@@ -133,7 +122,6 @@ export function SiteHeader() {
           ))}
           {user ? (
             <>
-              <Link href="/notifications" className="rounded-xl px-3 py-2.5 text-sm font-semibold">Notifications</Link>
               <Link href="/account" className="rounded-xl px-3 py-2.5 text-sm font-semibold">Profile</Link>
               <button onClick={logout} className="px-3 py-2.5 text-left text-sm font-semibold text-red-600">Logout</button>
             </>
