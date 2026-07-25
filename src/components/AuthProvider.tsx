@@ -23,7 +23,6 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 const customerOnlyRoutes = ["/checkout"];
 const supplierOnlyRoutes = ["/dashboard"];
-const adminOnlyRoutes = ["/admin"];
 const signedInRoutes = ["/account", "/orders"];
 
 function isWithin(pathname: string, routes: string[]) {
@@ -34,7 +33,6 @@ function isWithin(pathname: string, routes: string[]) {
 
 export function homeForRole(role: UserRole) {
   if (role === "supplier") return "/dashboard";
-  if (role === "admin") return "/admin";
   return "/products";
 }
 
@@ -42,7 +40,6 @@ function getRedirect(pathname: string, user: LocalAccount | null) {
   const protectedRoute = isWithin(pathname, [
     ...customerOnlyRoutes,
     ...supplierOnlyRoutes,
-    ...adminOnlyRoutes,
     ...signedInRoutes,
   ]);
 
@@ -52,9 +49,6 @@ function getRedirect(pathname: string, user: LocalAccount | null) {
     return homeForRole(user.role);
   }
   if (isWithin(pathname, supplierOnlyRoutes) && user.role !== "supplier") {
-    return homeForRole(user.role);
-  }
-  if (isWithin(pathname, adminOnlyRoutes) && user.role !== "admin") {
     return homeForRole(user.role);
   }
   return null;

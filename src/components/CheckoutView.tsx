@@ -83,7 +83,7 @@ export function CheckoutView({
               : "Order request submitted successfully."}
           </h1>
           <p className="mt-3 leading-7 text-muted-ink">
-            Admin will review and contact you. Your request ID is {submittedId}.
+            The supplier will review and contact you. Your request ID is {submittedId}.
           </p>
           <Link
             href="/products"
@@ -123,7 +123,7 @@ export function CheckoutView({
         {mode === "quote" ? "Submit Quote Request" : "Submit Order Request"}
       </h1>
       <p className="mt-2 text-sm text-muted-ink">
-        No payment is collected. Admin will review the request and contact you.
+        No payment is collected. The supplier will review the request and contact you.
       </p>
       <div className="mt-8 grid gap-7 lg:grid-cols-[minmax(0,1fr)_360px]">
         <form onSubmit={submit} className="surface-card p-6" noValidate>

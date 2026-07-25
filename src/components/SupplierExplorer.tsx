@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   AUTH_CHANGED_EVENT,
-  getApprovedProducts,
+  getActiveProducts,
   getSuppliers,
   PRODUCTS_CHANGED_EVENT,
   type Product,
@@ -19,7 +19,7 @@ export function SupplierExplorer() {
   useEffect(() => {
     const sync = () => {
       setSuppliers(getSuppliers());
-      setProducts(getApprovedProducts());
+      setProducts(getActiveProducts());
     };
     sync();
     window.addEventListener(AUTH_CHANGED_EVENT, sync);
@@ -69,7 +69,7 @@ export function SupplierExplorer() {
                 <strong className="block text-xl text-primary">
                   {products.length}
                 </strong>
-                Approved products
+                Active products
               </span>
               <span>
                 <strong className="block text-xl text-primary">

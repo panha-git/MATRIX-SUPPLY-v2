@@ -6,15 +6,12 @@ import { getMockReviews } from "./mock/reviews";
 import { getMockNotifications } from "./mock/notifications";
 import { getMockChatRooms, getMockMessages } from "./mock/chat";
 import { getMockOrders } from "./mock/orders";
-import { mockSearchSuggestions } from "./mock/search";
-import { getMockWishlist } from "./mock/wishlist";
-import { mockBanners } from "./mock/banners";
 
 export { PLATFORM_CHANGED_EVENT } from "./localAppStorage";
 
-export type UserRole = "customer" | "supplier" | "admin";
+export type UserRole = "customer" | "supplier";
 export type VerificationStatus = "verified_account" | "incomplete";
-export type AccountStatus = "active" | "suspended";
+export type AccountStatus = "active";
 
 type BaseAccount = {
   id: string;
@@ -54,11 +51,10 @@ export type SupplierAccount = BaseAccount & {
   description: string;
   phoneOrTelegram: string;
 };
-export type AdminAccount = BaseAccount & { role: "admin" };
-export type LocalAccount = CustomerAccount | SupplierAccount | AdminAccount;
+export type LocalAccount = CustomerAccount | SupplierAccount;
 export type RegistrationProfile = Partial<LocalAccount> & { role: "customer" | "supplier"; nationalId?: string };
 
-export type ProductStatus = "active" | "inactive" | "removed";
+export type ProductStatus = "active" | "inactive";
 export type Product = {
   id: string;
   supplierId: string;
@@ -99,7 +95,6 @@ export const PRODUCTS_CHANGED_EVENT = PLATFORM_CHANGED_EVENT;
 export const CARTS_CHANGED_EVENT = PLATFORM_CHANGED_EVENT;
 export const ORDERS_CHANGED_EVENT = PLATFORM_CHANGED_EVENT;
 export const NOTIFICATIONS_CHANGED_EVENT = PLATFORM_CHANGED_EVENT;
-export const DEMO_CHANGED_EVENT = PLATFORM_CHANGED_EVENT;
 
 export const normalizeGmail = (v: string) => v.trim().toLowerCase();
 export const isValidGmail = (v: string) => /^[^\s@]+@gmail\.com$/i.test(normalizeGmail(v));
@@ -118,7 +113,6 @@ export function loginOrCreateUser(gmail: string, profile?: RegistrationProfile) 
   const email = normalizeGmail(gmail);
   if (!isValidGmail(email)) throw Error("Enter a valid Gmail address.");
   let user = getAccountByGmail(email);
-  if (!user && email === "admin@gmail.com") user = adminAccount();
   if (!user && profile) user = createAccount(email, profile);
   if (!user) {
     if (email.endsWith("@gmail.com")) {
@@ -133,7 +127,6 @@ export function loginOrCreateUser(gmail: string, profile?: RegistrationProfile) 
     }
   }
   if (!user) throw Error("No account found. Complete secure registration first.");
-  if (user.status === "suspended") throw Error("This account is suspended. Contact marketplace support.");
   sessionStorage.setItem(SESSION, user.id);
   notifyChange();
   return user;
@@ -198,8 +191,7 @@ export function logout() {
 }
 
 export const getProducts = () => readLocal<Product[]>("products", []);
-export const getApprovedProducts = () => getProducts().filter((p) => p.status === "active");
-export const getActiveProducts = getApprovedProducts;
+export const getActiveProducts = () => getProducts().filter((p) => p.status === "active");
 export const getProductById = (id: string) => {
   const products = getProducts();
   return products.find((p) => p.id === id) || (id === "product_1" ? products[0] || null : null);
@@ -243,13 +235,12 @@ export function deleteProduct(id: string, sid: string) {
   return true;
 }
 
-export function setProductApproval(id: string, status: ProductStatus) {
+export function setProductStatus(id: string, supplierId: string, status: ProductStatus) {
   const all = getProducts();
-  const p = all.find((x) => x.id === id);
+  const p = all.find((x) => x.id === id && x.supplierId === supplierId);
   if (!p) return null;
   const next = { ...p, status, updatedAt: now() };
   writeLocal("products", all.map((x) => (x.id === id ? next : x)));
-  if (status === "removed") addNotification(p.supplierId, "Product removed", `${p.title} was removed by marketplace safety.`, "product", "/dashboard");
   return next;
 }
 
@@ -292,10 +283,6 @@ export function removeCartItem(id: string, pid: string) {
 
 export function clearCart(id: string) {
   saveCart({ customerId: id, items: [] });
-}
-
-export function getCartSummary() {
-  return { customerCarts: getCarts().length, itemQuantity: getCarts().reduce((n, c) => n + c.items.reduce((s, i) => s + i.quantity, 0), 0) };
 }
 
 export const getOrderRequests = () => readLocal<OrderRequest[]>("orders", []);
@@ -394,47 +381,12 @@ export function createReport(input: Omit<Report, "id" | "status" | "createdAt" |
   const r: Report = { ...input, id: makeId("report"), status: "new", createdAt: t, updatedAt: t };
   writeLocal("reports", [r, ...getReports()]);
   if (input.targetType === "product") writeLocal("products", getProducts().map((p) => (p.id === input.targetId ? { ...p, reportCount: p.reportCount + 1 } : p)));
-  const admin = getUsers().find((u) => u.role === "admin");
-  if (admin) addNotification(admin.id, "New safety report", `${input.reporterName} reported a ${input.targetType}.`, "report", "/admin");
   return r;
-}
-
-export function setReportStatus(id: string, status: Report["status"]) {
-  writeLocal("reports", getReports().map((r) => (r.id === id ? { ...r, status, updatedAt: now() } : r)));
-}
-
-export function setUserStatus(id: string, status: AccountStatus) {
-  const u = getUsers().find((x) => x.id === id);
-  if (!u) return null;
-  const n = saveUser({ ...u, status, updatedAt: now() } as LocalAccount);
-  addNotification(id, status === "suspended" ? "Account suspended" : "Account restored", status === "suspended" ? "Marketplace access has been suspended for safety review." : "Your marketplace access has been restored.", "account", "/account");
-  return n;
-}
-
-function adminAccount(): AdminAccount {
-  const t = now();
-  return saveUser({
-    id: "admin",
-    role: "admin",
-    fullName: "MATRIX SUPPLY Cambodia Admin",
-    gmail: "admin@gmail.com",
-    phoneNumber: "",
-    normalizedPhoneNumber: "",
-    phoneVerified: true,
-    maskedNationalId: "",
-    province: "Phnom Penh",
-    verificationStatus: "verified_account",
-    status: "active",
-    trustScore: 100,
-    createdAt: t,
-    updatedAt: t,
-  });
 }
 
 export function seedDemoData() {
   resetLocalAppStorage();
   const t = now();
-  const admin = adminAccount();
 
   const suppliers = getMockSuppliers().map((supplier, index) =>
     saveUser({
@@ -519,13 +471,10 @@ export function seedDemoData() {
 
   writeLocal("products", mockProducts);
   writeLocal("reviews", getMockReviews());
-  writeLocal("banners", mockBanners);
-  writeLocal("searchSuggestions", mockSearchSuggestions);
-  writeLocal("wishlist", getMockWishlist());
   writeLocal("orders", getMockOrders());
   writeLocal("notifications", [
-    ...getMockNotifications(admin.id),
     ...getMockNotifications(suppliers[0].id),
+    ...getMockNotifications(suppliers[1].id),
   ]);
   writeLocal("chats", getMockChatRooms());
   writeLocal("messages", getMockMessages());
@@ -538,8 +487,6 @@ export function seedDemoData() {
 
   notifyChange();
 }
-
-export const resetDemoData = resetLocalAppStorage;
 
 export function ensureDemoData() {
   if (typeof window === "undefined") return;

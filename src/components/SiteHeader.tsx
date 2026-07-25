@@ -40,9 +40,7 @@ export function SiteHeader() {
     ? guestLinks
     : user.role === "customer"
       ? [["Search", "/products"], ["Cart", "/cart"], ["Chat", "/chat"], ["Alerts", "/notifications"]]
-      : user.role === "supplier"
-        ? [["Dashboard", "/dashboard"], ["Orders", "/orders"], ["Chat", "/chat"]]
-        : [["Dashboard", "/admin"], ["Orders", "/orders"], ["Chat", "/chat"]];
+      : [["Dashboard", "/dashboard"], ["Orders", "/orders"], ["Chat", "/chat"]];
 
   const active = (href: string) => href !== "/" && !href.includes("#") && (pathname === href || pathname.startsWith(`${href}/`));
 

@@ -91,14 +91,10 @@ const store = nodeModule.exports;
 
 store.seedDemoData();
 assert.ok(store.getSuppliers().length >= 40);
-assert.ok(store.getApprovedProducts().length >= 120);
+assert.ok(store.getActiveProducts().length >= 120);
 assert.ok(store.getNotifications().length >= 20);
 assert.ok(store.getChatRooms().length >= 8);
 
-store.loginOrCreateUser("admin@gmail.com");
-assert.equal(store.getCurrentUser().role, "admin");
-
-store.logout();
 const customer = store.loginOrCreateUser("customer@gmail.com", {
   role: "customer",
   fullName: "Sokha Demo Updated",
@@ -125,7 +121,7 @@ assert.equal(request.status, "new");
 assert.equal(store.getCart(customer.id).items.length, 0);
 
 store.logout();
-const supplier = store.loginOrCreateUser("office.supply@gmail.com");
+const supplier = store.getSuppliers()[0];
 const submission = store.createProduct(supplier, {
   title: "Demo Cocoa Powder",
   description: "A product created by the automated local data check.",
@@ -138,10 +134,9 @@ const submission = store.createProduct(supplier, {
 });
 assert.equal(submission.status, "active");
 
-store.logout();
-store.loginOrCreateUser("admin@gmail.com");
-assert.equal(store.setProductApproval(submission.id, "active").status, "active");
+assert.equal(store.setProductStatus(submission.id, supplier.id, "inactive").status, "inactive");
+assert.equal(store.setProductStatus(submission.id, supplier.id, "active").status, "active");
 assert.equal(store.setOrderStatus(request.id, "completed").status, "completed");
-assert.ok(store.getApprovedProducts().some((product) => product.id === submission.id));
+assert.ok(store.getActiveProducts().some((product) => product.id === submission.id));
 
 console.log("Local demo data flows passed.");

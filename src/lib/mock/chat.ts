@@ -17,7 +17,7 @@ export type MockMessage = {
   chatRoomId: string;
   senderId: string;
   senderName: string;
-  senderRole: "customer" | "supplier" | "admin";
+  senderRole: "customer" | "supplier";
   receiverId: string;
   message: string;
   read: boolean;
