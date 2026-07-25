@@ -104,7 +104,7 @@ img {
 @layer components {
   .primary-btn { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg; }
   .secondary-btn { @apply inline-flex items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-bold text-primary transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md; }
-  .eyebrow { @apply inline-flex rounded-full bg-[var(--accent-soft)] px-3 py-1 text-[11px] font-bold uppercase tracking-[.08em] text-[var(--accent)]; }
+  .eyebrow { @apply inline-flex rounded-full bg-(--accent-soft) px-3 py-1 text-[11px] font-bold uppercase tracking-[.08em] text-(--accent); }
   .notice { @apply rounded-2xl border border-primary/10 bg-primary-soft p-5 text-sm leading-6 text-primary-dark; }
   .badge { @apply inline-flex rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary; }
   .check-row { @apply flex items-start gap-3 text-sm font-medium text-foreground; }

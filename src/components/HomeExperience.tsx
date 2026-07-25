@@ -1,20 +1,121 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { getActiveProducts, PLATFORM_CHANGED_EVENT, type Product } from "@/lib/localStorage";
+import { useEffect, useMemo, useState } from "react";
+import { addToCart, getActiveProducts, getSuppliers, PLATFORM_CHANGED_EVENT, startChat, type Product, type SupplierAccount } from "@/lib/localStorage";
 import { Icon } from "./Icon";
 import { ProductCard } from "./ProductCard";
 import { SectionHeader, VerifiedBadge } from "./ui";
 import { useMarketplace } from "./MarketplaceProvider";
-import { addToCart, startChat } from "@/lib/localStorage";
 import { useRouter } from "next/navigation";
 
 const categories=["Food & Beverage","Agriculture","Electronics","Construction Materials","Office Supplies","Packaging Supplies"];
-export function HomeExperience(){const [products,setProducts]=useState<Product[]>([]),{requireCustomer,notify}=useMarketplace(),router=useRouter();useEffect(()=>{const sync=()=>setProducts(getActiveProducts().slice(0,4));sync();window.addEventListener(PLATFORM_CHANGED_EVENT,sync);return()=>window.removeEventListener(PLATFORM_CHANGED_EVENT,sync)},[]);const add=(p:Product)=>requireCustomer(c=>{addToCart(c.id,p);notify("Product added to your cart")});const chat=(p:Product)=>requireCustomer(c=>router.push(`/chat?room=${startChat(c,p).id}`));return <>
-<section className="overflow-hidden border-b border-line bg-white"><div className="container-shell grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_.95fr] lg:py-24"><div><VerifiedBadge>Verified Cambodian Marketplace</VerifiedBadge><h1 className="mt-6 max-w-3xl text-4xl font-black leading-[1.08] tracking-[-.045em] text-primary sm:text-6xl">Cambodia’s Trusted Supplier Marketplace</h1><p className="mt-5 max-w-2xl text-lg leading-8 text-muted-ink">Buy, sell, and connect with verified Cambodian suppliers through MATRIX SUPPLY Cambodia.</p><div className="mt-8 flex flex-wrap gap-3"><Link href="/products" className="primary-btn px-6 py-3.5">Browse Marketplace <Icon name="arrowRight" size={16}/></Link><Link href="/login" className="secondary-btn px-6 py-3.5">Become a Supplier</Link></div><div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-slate-500"><span>✓ Phone Verification</span><span>✓ Identity Information</span><span>✓ Local Cambodian Suppliers</span></div></div><MarketplacePreview/></div></section>
-<section className="container-shell py-12"><div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{[["shield","Verified Suppliers"],["check","Phone Verification"],["user","National ID Provided"],["mapPin","Local Cambodian Marketplace"]].map(([icon,label])=><div key={label} className="card flex items-center gap-3 p-4"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[var(--accent-soft)] text-accent"><Icon name={icon as "shield"}/></span><strong className="text-sm">{label}</strong></div>)}</div></section>
-<section id="how-it-works" className="border-y border-line bg-white"><div className="container-shell py-16"><SectionHeader title="A simple, trusted way to trade" description="Built for Cambodian customers and suppliers to connect with confidence."/><div className="grid gap-5 md:grid-cols-3">{[["01","Register securely","Complete phone and identity information for a Verified Account."],["02","Buy or sell products","Browse trusted listings or post products directly as a supplier."],["03","Chat and manage orders","Coordinate order requests and fulfillment in one place."]].map(([n,t,d])=><div key={n} className="card hover-card p-6"><span className="text-xs font-black text-accent">{n}</span><h3 className="mt-5 text-lg font-bold">{t}</h3><p className="mt-2 text-sm leading-6 text-muted-ink">{d}</p></div>)}</div></div></section>
-<section className="container-shell py-16"><SectionHeader title="Featured categories" description="Find everyday business supplies from verified Cambodian suppliers." action={<Link href="/products" className="text-sm font-bold text-primary">View marketplace →</Link>}/><div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">{categories.map((x,i)=><Link key={x} href={`/products?category=${encodeURIComponent(x)}`} className="card hover-card p-5"><span className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary"><Icon name={i%2?"package":"store"}/></span><strong className="mt-5 block text-sm">{x}</strong></Link>)}</div></section>
-{products.length>0&&<section className="border-y border-line bg-white"><div className="container-shell py-16"><SectionHeader title="Featured products" description="Active listings from the Trusted Supplier Network."/><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{products.map(p=><ProductCard key={p.id} product={p} onAddToCart={add} onRequestQuote={chat} onChat={chat}/>)}</div></div></section>}
-<section className="container-shell py-16"><div className="grid overflow-hidden rounded-3xl bg-primary text-white md:grid-cols-2"><div className="border-b border-white/10 p-8 md:border-b-0 md:border-r lg:p-10"><span className="text-xs font-bold uppercase tracking-wider text-emerald-300">For suppliers</span><h2 className="mt-3 text-2xl font-bold">Start selling to customers across Cambodia</h2><p className="mt-3 text-sm leading-6 text-white/70">Create your verified business profile and publish products directly.</p><Link href="/login" className="mt-6 inline-flex rounded-xl bg-white px-5 py-3 text-sm font-bold text-primary">Register as Supplier</Link></div><div className="p-8 lg:p-10"><span className="text-xs font-bold uppercase tracking-wider text-emerald-300">For customers</span><h2 className="mt-3 text-2xl font-bold">Find trusted products from local suppliers</h2><p className="mt-3 text-sm leading-6 text-white/70">Compare products, chat with suppliers, and submit order requests.</p><Link href="/products" className="mt-6 inline-flex rounded-xl border border-white/25 px-5 py-3 text-sm font-bold text-white">Explore Products</Link></div></div></section></>}
-function MarketplacePreview(){return <div className="relative mx-auto max-w-lg rounded-[28px] border border-line bg-background p-5 shadow-[0_24px_60px_rgba(17,43,74,.14)]"><div className="flex items-center justify-between border-b border-line pb-4"><div><p className="text-xs font-bold text-primary">Marketplace activity</p><p className="mt-1 text-[11px] text-muted-ink">MATRIX SUPPLY Cambodia</p></div><VerifiedBadge/></div><div className="mt-5 grid grid-cols-[1fr_120px] gap-4"><div className="rounded-2xl bg-white p-4 shadow-sm"><div className="aspect-[5/3] rounded-xl bg-[linear-gradient(135deg,#e7f7f1,#eaf0f7)]"/><VerifiedBadge>Verified Supplier</VerifiedBadge><h3 className="mt-3 text-sm font-bold">Cambodian business supplies</h3><p className="mt-2 text-lg font-black text-primary">$24.00</p></div><div className="space-y-3"><div className="rounded-2xl bg-white p-3 shadow-sm"><Icon name="cart" size={17} className="text-accent"/><p className="mt-3 text-[10px] text-muted-ink">Order request</p><strong className="text-xs">Received</strong></div><div className="rounded-2xl bg-primary p-3 text-white shadow-sm"><Icon name="headset" size={17}/><p className="mt-3 text-[10px] text-white/65">New message</p><strong className="text-xs">Supplier chat</strong></div></div></div></div>}
+const spotlightStats=[{label:"Verified suppliers",value:"1.2k+",detail:"active across Cambodia"},{label:"Daily RFQs",value:"3.4k",detail:"from local buyers"},{label:"Lead times",value:"< 48h",detail:"on priority products"}];
+const heroHighlights=[{title:"Fast-moving products",detail:"Coffee, rice, packaging, office essentials"},{title:"Live supplier chats",detail:"Response rates remain high after business hours"},{title:"Wholesale-ready stock",detail:"MOQ and shipment details are visible before you contact a seller"}];
+
+export function HomeExperience(){
+  const [products,setProducts]=useState<Product[]>([]);
+  const [suppliers,setSuppliers]=useState<SupplierAccount[]>([]);
+  const {requireCustomer,notify}=useMarketplace();
+  const router=useRouter();
+
+  useEffect(()=>{const sync=()=>{setProducts(getActiveProducts());setSuppliers(getSuppliers())};sync();window.addEventListener(PLATFORM_CHANGED_EVENT,sync);window.addEventListener("storage",sync);return()=>{window.removeEventListener(PLATFORM_CHANGED_EVENT,sync);window.removeEventListener("storage",sync)}},[]);
+
+  const featuredProducts=useMemo(()=>products.slice(0,8),[products]);
+  const freshProducts=useMemo(()=>[...products].sort((a,b)=>new Date(b.createdAt).getTime()-new Date(a.createdAt).getTime()).slice(0,8),[products]);
+  const supplierHighlights=useMemo(()=>suppliers.slice(0,6),[suppliers]);
+
+  const add=(p:Product)=>requireCustomer(c=>{addToCart(c.id,p);notify("Product added to your cart")});
+  const chat=(p:Product)=>requireCustomer(c=>router.push(`/chat?room=${startChat(c,p).id}`));
+
+  return <>
+    <section className="overflow-hidden border-b border-line bg-white">
+      <div className="container-shell py-10 lg:py-14">
+        <div className="rounded-[32px] border border-line bg-white p-6 shadow-[0_24px_60px_rgba(17,43,74,.08)] lg:p-8">
+          <div className="flex flex-wrap gap-2">
+            {categories.map((item)=><span key={item} className="rounded-full border border-line bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[.08em] text-slate-600">{item}</span>)}
+          </div>
+          <div className="mt-8 grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+            <div>
+              <VerifiedBadge>Verified Cambodian wholesale network</VerifiedBadge>
+              <h1 className="mt-6 max-w-3xl text-4xl font-black leading-[1.08] tracking-[-.045em] text-primary sm:text-6xl">Buy from thousands of active suppliers in Cambodia</h1>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-muted-ink">Browse wholesale products, compare supplier performance, and discover fast-moving goods from verified local businesses.</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/products" className="primary-btn px-6 py-3.5">Browse marketplace <Icon name="arrowRight" size={16}/></Link>
+                <Link href="/suppliers" className="secondary-btn px-6 py-3.5">Explore suppliers</Link>
+              </div>
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {spotlightStats.map((stat)=><div key={stat.label} className="rounded-2xl border border-line bg-[#f8fafc] p-4"><p className="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-500">{stat.label}</p><strong className="mt-2 block text-xl font-black text-primary">{stat.value}</strong><p className="mt-1 text-sm text-muted-ink">{stat.detail}</p></div>)}
+              </div>
+            </div>
+            <div className="rounded-[28px] border border-line bg-[#f8fafc] p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-primary">Live marketplace pulse</p>
+                  <p className="mt-1 text-sm text-muted-ink">Fresh movement from today’s top trade activity</p>
+                </div>
+                <VerifiedBadge>Live</VerifiedBadge>
+              </div>
+              <div className="mt-5 grid gap-3">
+                {heroHighlights.map((item)=><div key={item.title} className="rounded-2xl border border-line bg-white p-4 shadow-sm"><p className="text-sm font-bold text-primary">{item.title}</p><p className="mt-1 text-sm leading-6 text-muted-ink">{item.detail}</p></div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="container-shell py-10">
+      <SectionHeader title="Trending today" description="A mix of high-volume products and reliable suppliers that buyers are exploring now." action={<Link href="/products" className="text-sm font-bold text-primary">View all products →</Link>} />
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {featuredProducts.map((product)=><ProductCard key={product.id} product={product} onAddToCart={add} onRequestQuote={chat} onChat={chat}/>)}
+      </div>
+    </section>
+
+    <section className="border-y border-line bg-white">
+      <div className="container-shell py-12">
+        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-[28px] border border-line bg-[#fcfdfd] p-6">
+            <SectionHeader title="Popular suppliers right now" description="Businesses that are seeing steady demand from retailers, hotels, and project buyers." />
+            <div className="mt-4 grid gap-3">
+              {supplierHighlights.map((supplier)=><Link key={supplier.id} href={`/products?search=${encodeURIComponent(supplier.businessName)}`} className="flex items-start justify-between gap-4 rounded-2xl border border-line bg-white p-4 hover:border-primary/30 hover:shadow-sm">
+                <div>
+                  <p className="font-bold text-primary">{supplier.businessName}</p>
+                  <p className="mt-1 text-sm text-muted-ink">{supplier.businessCategory} · {supplier.location}</p>
+                </div>
+                <span className="rounded-full bg-[#e7f7f1] px-3 py-1 text-[11px] font-bold text-accent">{supplier.trustScore}% trust</span>
+              </Link>)}
+            </div>
+          </div>
+          <div className="rounded-[28px] bg-primary p-6 text-white">
+            <p className="text-sm font-semibold uppercase tracking-[.12em] text-emerald-300">Wholesale-ready experience</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-.03em]">Move from discovery to quote in a few clicks</h2>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-white/75">Every listing surfaces pricing, MOQ, capacity, and supplier trust details so buyers can make confident decisions without jumping through channels.</p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {[["Fast response","Chat and RFQ flows are built into the experience"],["Verified trust","Profiles are rich enough to feel like real local businesses"]].map(([title,detail])=><div key={title} className="rounded-2xl border border-white/15 bg-white/10 p-4"><p className="text-sm font-semibold">{title}</p><p className="mt-1 text-sm leading-6 text-white/70">{detail}</p></div>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="container-shell py-12">
+      <SectionHeader title="Recently added" description="Fresh listings that keep the marketplace feeling active and newly updated." action={<Link href="/products" className="text-sm font-bold text-primary">Browse fresh inventory →</Link>} />
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {freshProducts.map((product)=><ProductCard key={product.id} product={product} onAddToCart={add} onRequestQuote={chat} onChat={chat}/>) }
+      </div>
+    </section>
+
+    <section className="container-shell pb-16">
+      <div className="grid gap-4 rounded-[28px] border border-line bg-white p-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[.12em] text-accent">Why buyers stay on the platform</p>
+          <h2 className="mt-3 text-2xl font-black tracking-[-.02em] text-primary">A marketplace that feels like a living, active trade hub</h2>
+          <p className="mt-3 text-sm leading-7 text-muted-ink">The experience is designed for curiosity, comparison, and repeated exploration so every page pushes the next click.</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[["Fast delivery","Priority suppliers are marked with quick dispatch and infrastructure-ready fulfillment"],["Strong discovery","Search, categories and recommendations keep conversations moving forward"],["Reliable sourcing","Detailed supplier profiles reduce friction before a buyer ever chats"],["No dead ends","Every section leads naturally to more products, suppliers, or quotes"]].map(([title,detail])=><div key={title} className="rounded-2xl border border-line bg-[#f8fafc] p-4"><p className="font-semibold text-primary">{title}</p><p className="mt-2 text-sm leading-6 text-muted-ink">{detail}</p></div>)}
+        </div>
+      </div>
+    </section>
+  </>;
+}
