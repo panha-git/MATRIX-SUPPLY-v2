@@ -283,7 +283,7 @@ function ProductRow({ product, onToggle, onDelete }: { product: Product; onToggl
         <button onClick={onToggle} className="secondary-btn px-3 py-2 text-xs">
           Set {product.status === "active" ? "inactive" : "active"}
         </button>
-        <button onClick={onDelete} className="secondary-btn px-3 py-2 text-xs text-red-600">
+        <button onClick={onDelete} className="danger-btn px-3 py-2 text-xs">
           Delete
         </button>
       </div>

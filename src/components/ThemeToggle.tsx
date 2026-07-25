@@ -11,7 +11,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={cycleTheme}
-      className="grid size-10 place-items-center rounded-full border border-line bg-surface text-primary hover:bg-primary-soft"
+      className="icon-btn"
       aria-label={`${label}. Switch visual mode`}
       title={`${label}. Click for next mode.`}
     >

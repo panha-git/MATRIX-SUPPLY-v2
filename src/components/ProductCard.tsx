@@ -91,7 +91,7 @@ export function ProductCard({
           <button
             disabled={out}
             onClick={() => onAddToCart(product)}
-            className="primary-btn px-2 py-2 text-xs disabled:cursor-not-allowed disabled:bg-slate-300 sm:px-3 sm:py-2.5"
+            className="primary-btn px-2 py-2 text-xs disabled:cursor-not-allowed sm:px-3 sm:py-2.5"
           >
             <Icon name="cart" size={14} /> Add
           </button>
@@ -104,7 +104,7 @@ export function ProductCard({
         </div>
 
         {onReport && (
-          <button onClick={() => onReport(product)} className="mt-2 text-left text-[10px] font-semibold text-muted-ink hover:text-red-600 sm:mt-3 sm:text-[11px]">
+          <button onClick={() => onReport(product)} className="danger-btn mt-2 justify-start px-2 py-1.5 text-[10px] sm:mt-3 sm:text-[11px]">
             Report Product
           </button>
         )}

@@ -69,7 +69,7 @@ export function CartView() {
             </p>
             <Link
               href="/products"
-              className="mt-5 inline-flex rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white"
+              className="primary-btn mt-5"
             >
               Browse marketplace
             </Link>
@@ -125,7 +125,7 @@ export function CartView() {
                   </p>
                   <button
                     onClick={() => remove(item)}
-                    className="mt-2 text-xs font-semibold text-red-600"
+                    className="danger-btn mt-2 px-3 py-2 text-xs"
                   >
                     Remove
                   </button>

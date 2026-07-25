@@ -103,7 +103,7 @@ export function NotificationPopover({
                 <div className="mt-2 flex items-center justify-between gap-3">
                   <span className="text-[11px] font-semibold text-muted-ink">{relativeTime(item.createdAt)}</span>
                   {!item.read && (
-                    <button type="button" onClick={() => markNotificationRead(item.id)} className="text-[11px] font-bold text-primary">
+                    <button type="button" onClick={() => markNotificationRead(item.id)} className="ghost-btn px-2 py-1 text-[11px]">
                       Mark read
                     </button>
                   )}

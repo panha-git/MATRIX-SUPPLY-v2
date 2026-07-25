@@ -68,7 +68,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2 xl:ml-2">
           <Link
             href="/products"
-            className="flex size-10 items-center justify-center rounded-full border border-line bg-surface text-primary shadow-sm hover:bg-primary-soft sm:size-auto sm:gap-2 sm:px-3 sm:py-2 sm:text-xs sm:font-bold xl:hidden"
+            className="icon-btn sm:inline-flex sm:w-auto sm:px-3 sm:text-xs sm:font-bold xl:hidden"
             aria-label="Search products"
           >
             <Icon name="search" size={15} />
@@ -80,7 +80,7 @@ export function SiteHeader() {
               <div className="relative">
                 <button
                   onClick={() => setNoticeOpen(!noticeOpen)}
-                  className="relative grid size-10 place-items-center rounded-full border border-line text-primary hover:bg-primary-soft"
+                  className="icon-btn relative"
                   aria-label="Notifications"
                 >
                   <Icon name="bell" size={18} />
@@ -94,10 +94,10 @@ export function SiteHeader() {
                   <NotificationPopover items={notifications} open={noticeOpen} onClose={() => setNoticeOpen(false)} />
                 )}
               </div>
-              <Link href="/account" className="hidden size-10 place-items-center rounded-full bg-primary text-xs font-bold text-white sm:grid">
+              <Link href="/account" className="hidden size-10 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground sm:grid">
                 {(user.role === "supplier" ? user.businessName : user.fullName).slice(0, 2).toUpperCase()}
               </Link>
-              <button onClick={logout} className="hidden text-xs font-semibold text-muted-ink hover:text-red-600 lg:block">
+              <button onClick={logout} className="ghost-btn hidden px-3 py-2 text-xs text-destructive lg:inline-flex">
                 Logout
               </button>
             </>
@@ -107,7 +107,7 @@ export function SiteHeader() {
             </Link>
           )}
 
-          <button onClick={() => setOpen(!open)} className="grid size-10 place-items-center rounded-full border border-line xl:hidden" aria-label="Toggle navigation">
+          <button onClick={() => setOpen(!open)} className="icon-btn xl:hidden" aria-label="Toggle navigation">
             <Icon name={open ? "close" : "menu"} />
           </button>
         </div>
@@ -123,7 +123,7 @@ export function SiteHeader() {
           {user ? (
             <>
               <Link href="/account" className="rounded-xl px-3 py-2.5 text-sm font-semibold">Profile</Link>
-              <button onClick={logout} className="px-3 py-2.5 text-left text-sm font-semibold text-red-600">Logout</button>
+              <button onClick={logout} className="danger-btn justify-start px-3 py-2.5 text-sm">Logout</button>
             </>
           ) : (
             <Link href="/login" className="rounded-xl px-3 py-2.5 text-sm font-semibold text-primary">Sign in</Link>

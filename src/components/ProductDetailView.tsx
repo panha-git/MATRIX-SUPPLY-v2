@@ -68,7 +68,7 @@ export function ProductDetailView({ productId }: { productId: string }) {
         </p>
         <Link
           href="/products"
-          className="mt-6 inline-flex rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white"
+          className="primary-btn mt-6"
         >
           Back to marketplace
         </Link>
@@ -152,12 +152,12 @@ export function ProductDetailView({ productId }: { productId: string }) {
             <div className="mt-3 flex flex-wrap gap-2">{rich.tags.map((tag) => <span key={tag} className="badge">{tag}</span>)}</div>
           </section>}
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <button onClick={addProduct} disabled={product.stockQuantity === 0} className="primary-btn py-3.5 disabled:bg-slate-300"><Icon name="cart" size={17} /> Add to cart</button>
+            <button onClick={addProduct} disabled={product.stockQuantity === 0} className="primary-btn py-3.5"><Icon name="cart" size={17} /> Add to cart</button>
             <button onClick={requestQuote} className="secondary-btn py-3.5">Chat with Supplier</button>
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link href={`/products?search=${encodeURIComponent(product.supplierName)}`} className="text-sm font-semibold text-primary">See more from this supplier →</Link>
-            <button onClick={reportProduct} className="text-xs font-semibold text-muted-ink hover:text-red-600">Report Product</button>
+            <button onClick={reportProduct} className="danger-btn px-3 py-2 text-xs">Report Product</button>
           </div>
           <section className="mt-7 rounded-2xl border border-line bg-surface p-5">
             <h2 className="font-bold">Supplier profile</h2>

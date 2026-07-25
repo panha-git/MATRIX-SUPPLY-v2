@@ -87,7 +87,7 @@ export function CheckoutView({
           </p>
           <Link
             href="/products"
-            className="mt-6 inline-flex rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white"
+            className="primary-btn mt-6"
           >
             Return to marketplace
           </Link>
@@ -105,7 +105,7 @@ export function CheckoutView({
         </p>
         <Link
           href="/products"
-          className="mt-6 inline-flex rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white"
+          className="primary-btn mt-6"
         >
           Browse marketplace
         </Link>
@@ -157,7 +157,7 @@ export function CheckoutView({
               {error}
             </p>
           )}
-          <button className="mt-6 w-full rounded-xl bg-primary py-3.5 text-sm font-bold text-white">
+          <button className="primary-btn mt-6 w-full py-3.5">
             {mode === "quote" ? "Submit Quote Request" : "Submit Order Request"}
           </button>
         </form>

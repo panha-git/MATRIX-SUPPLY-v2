@@ -4,41 +4,68 @@
   --background: #f8fbff;
   --foreground: #0f172a;
   --primary: #2563eb;
+  --primary-hover: #1d4ed8;
   --primary-dark: #0f172a;
   --primary-soft: #eaf1ff;
+  --secondary: #ffffff;
+  --secondary-hover: #eef5ff;
   --accent: #22c55e;
   --accent-soft: #e9fbea;
+  --destructive: #dc2626;
+  --destructive-soft: #fff1f2;
   --muted: #64748b;
   --line: #dbe6f4;
   --surface: #ffffff;
   --surface-muted: #f1f6ff;
+  --surface-hover: #eef5ff;
+  --disabled: #d8e3f1;
+  --disabled-foreground: #7c8da3;
+  --primary-foreground: #ffffff;
 }
 
 [data-theme="dark"] {
   --background: #071225;
   --foreground: #f8fbff;
   --primary: #3b82f6;
+  --primary-hover: #60a5fa;
   --primary-dark: #ffffff;
   --primary-soft: #10254a;
+  --secondary: #0f1d33;
+  --secondary-hover: #182945;
   --accent: #22c55e;
   --accent-soft: #0d3323;
+  --destructive: #f87171;
+  --destructive-soft: #3b151b;
   --muted: #b6c3d6;
   --line: #20324f;
   --surface: #0f1d33;
   --surface-muted: #111f38;
+  --surface-hover: #182945;
+  --disabled: #263954;
+  --disabled-foreground: #8091aa;
+  --primary-foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-dark: var(--primary-dark);
   --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
   --color-accent: var(--accent);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
   --color-muted-ink: var(--muted);
   --color-line: var(--line);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+  --color-disabled: var(--disabled);
+  --color-disabled-foreground: var(--disabled-foreground);
+  --color-primary-foreground: var(--primary-foreground);
   --font-sans: var(--font-geist-sans);
 }
 
@@ -120,8 +147,11 @@ img {
 }
 
 @layer components {
-  .primary-btn { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg; }
-  .secondary-btn { @apply inline-flex items-center justify-center rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-bold text-primary transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md; }
+  .primary-btn { @apply inline-flex items-center justify-center gap-2 rounded-xl border border-transparent bg-primary px-5 py-3 text-sm font-bold text-primary-foreground shadow-sm transition hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-lg active:translate-y-0 disabled:cursor-not-allowed disabled:border-line disabled:bg-disabled disabled:text-disabled-foreground disabled:shadow-none disabled:hover:translate-y-0; }
+  .secondary-btn { @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-secondary px-4 py-2.5 text-sm font-bold text-primary transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-secondary-hover hover:shadow-md active:translate-y-0 disabled:cursor-not-allowed disabled:bg-disabled disabled:text-disabled-foreground disabled:shadow-none disabled:hover:translate-y-0; }
+  .ghost-btn { @apply inline-flex items-center justify-center gap-2 rounded-xl border border-transparent bg-transparent px-4 py-2.5 text-sm font-bold text-muted-ink transition hover:bg-surface-hover hover:text-foreground active:bg-surface-muted disabled:cursor-not-allowed disabled:text-disabled-foreground disabled:hover:bg-transparent; }
+  .danger-btn { @apply inline-flex items-center justify-center gap-2 rounded-xl border border-transparent bg-destructive-soft px-4 py-2.5 text-sm font-bold text-destructive transition hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 disabled:cursor-not-allowed disabled:bg-disabled disabled:text-disabled-foreground disabled:shadow-none disabled:hover:translate-y-0; }
+  .icon-btn { @apply inline-grid size-10 place-items-center rounded-full border border-line bg-secondary text-primary shadow-sm transition hover:bg-secondary-hover active:bg-surface-muted disabled:cursor-not-allowed disabled:bg-disabled disabled:text-disabled-foreground; }
   .eyebrow { @apply inline-flex rounded-full bg-(--accent-soft) px-3 py-1 text-[11px] font-bold uppercase tracking-[.08em] text-(--accent); }
   .notice { @apply rounded-2xl border border-primary/10 bg-primary-soft p-5 text-sm leading-6 text-primary-dark; }
   .badge { @apply inline-flex rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary; }
