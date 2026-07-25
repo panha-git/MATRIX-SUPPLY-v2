@@ -110,24 +110,24 @@ export function ProductDetailView({ productId }: { productId: string }) {
             onError={(event) => {
               event.currentTarget.src = "/product-placeholder.svg";
             }}
-            className="aspect-[4/3] w-full rounded-[28px] border border-line bg-white object-cover shadow-[0_16px_40px_rgba(17,43,74,.08)]"
+            className="aspect-[4/3] w-full rounded-[28px] border border-line bg-surface object-cover shadow-[0_16px_40px_rgba(17,43,74,.08)]"
           />
           {rich && <div className="mt-4 grid grid-cols-3 gap-3">
             {rich.images.slice(1, 4).map((image) => <img key={image} src={image} alt={product.title} className="aspect-[4/3] rounded-2xl border border-line object-cover" />)}
           </div>}
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-line bg-[#f8fafc] p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-500">Lead time</p>
+            <div className="rounded-2xl border border-line bg-surface-muted p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-muted-ink">Lead time</p>
               <p className="mt-2 text-sm font-bold text-primary">{rich?.leadTime || "Ready to ship in 24-48 hours"}</p>
             </div>
-            <div className="rounded-2xl border border-line bg-[#f8fafc] p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-500">MOQ</p>
+            <div className="rounded-2xl border border-line bg-surface-muted p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-muted-ink">MOQ</p>
               <p className="mt-2 text-sm font-bold text-primary">MOQ {rich?.MOQ || "flexible"} · {rich?.packagingInformation.split(",")[0] || "wholesale packing"}</p>
             </div>
           </div>
         </div>
         <div>
-          <div className="flex flex-wrap gap-2"><span className="badge">{product.category}</span><span className="verified-badge">✓ Verified Cambodian Supplier</span></div>
+          <div className="flex flex-wrap gap-2"><span className="badge">{product.category}</span><span className="verified-badge">✓ Verified NEXXA Supplier</span></div>
           <h1 className="mt-4 text-3xl font-black sm:text-4xl">{product.title}</h1>
           <p className="mt-3 text-sm font-semibold text-primary-dark">Supplied by {product.supplierName}</p>
           <div className="mt-5 flex items-baseline gap-2">
@@ -143,7 +143,7 @@ export function ProductDetailView({ productId }: { productId: string }) {
             <Detail label="Warehouse" value={rich?.warehouseLocation || product.locationDetails} />
             <Detail label="Buyer interest" value={`${rich?.views.toLocaleString() || "9,800"} views · ${rich?.favouriteCount || 205} saved`} />
           </dl>
-          {rich && <section className="mt-6 rounded-2xl border border-line bg-white p-5">
+          {rich && <section className="mt-6 rounded-2xl border border-line bg-surface p-5">
             <h2 className="font-bold">Specifications and packing</h2>
             <div className="mt-4 grid gap-2 sm:grid-cols-2">
               {Object.entries(rich.specifications).map(([key, value]) => <Detail key={key} label={key.replaceAll("_", " ")} value={value} />)}
@@ -157,9 +157,9 @@ export function ProductDetailView({ productId }: { productId: string }) {
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link href={`/products?search=${encodeURIComponent(product.supplierName)}`} className="text-sm font-semibold text-primary">See more from this supplier →</Link>
-            <button onClick={reportProduct} className="text-xs font-semibold text-slate-400 hover:text-red-600">Report Product</button>
+            <button onClick={reportProduct} className="text-xs font-semibold text-muted-ink hover:text-red-600">Report Product</button>
           </div>
-          <section className="mt-7 rounded-2xl border border-line bg-[#f8faf9] p-5">
+          <section className="mt-7 rounded-2xl border border-line bg-surface p-5">
             <h2 className="font-bold">Supplier profile</h2>
             <p className="mt-2 text-sm font-semibold text-primary-dark">{product.supplierName}</p>
             <p className="mt-1 text-xs text-muted-ink">{product.supplierGmail}</p>
@@ -172,13 +172,13 @@ export function ProductDetailView({ productId }: { productId: string }) {
       {relatedProducts.length > 0 && <section className="mt-12">
         <SectionHeading title="Related products" description="Other wholesale options in the same category." />
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {relatedProducts.map((item)=><Link key={item.id} href={`/products/${item.id}`} className="rounded-2xl border border-line bg-white p-4 hover:border-primary/30 hover:shadow-sm"><p className="text-sm font-semibold text-primary">{item.title}</p><p className="mt-2 text-sm text-muted-ink">{item.category}</p><p className="mt-3 text-lg font-black text-primary">${item.price.toFixed(2)}</p></Link>)}
+          {relatedProducts.map((item)=><Link key={item.id} href={`/products/${item.id}`} className="rounded-2xl border border-line bg-surface p-4 hover:border-primary/30 hover:shadow-sm"><p className="text-sm font-semibold text-primary">{item.title}</p><p className="mt-2 text-sm text-muted-ink">{item.category}</p><p className="mt-3 text-lg font-black text-primary">${item.price.toFixed(2)}</p></Link>)}
         </div>
       </section>}
       <section className="mt-12">
         <SectionHeading title="Recent buyer reviews" description="Verified procurement notes from restaurants, retailers, and project teams." />
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
-          {reviews.map((review) => <article key={`${review.reviewerName}-${review.reviewDate}`} className="rounded-2xl border border-line bg-white p-5"><div className="flex items-start gap-3"><img src={review.avatar} alt={review.reviewerName} className="size-11 rounded-full object-cover" /><div><h3 className="font-bold">{review.reviewerName}</h3><p className="text-xs text-muted-ink">★ {review.rating} · {new Date(review.reviewDate).toLocaleDateString()} · {review.verifiedPurchase ? "Verified purchase" : "Trade inquiry"}</p></div></div><p className="mt-3 text-sm leading-6 text-muted-ink">{review.comment}</p>{review.supplierReply&&<p className="mt-3 rounded-xl bg-primary-soft p-3 text-xs leading-5 text-primary">Supplier reply: {review.supplierReply}</p>}</article>)}
+          {reviews.map((review) => <article key={`${review.reviewerName}-${review.reviewDate}`} className="rounded-2xl border border-line bg-surface p-5"><div className="flex items-start gap-3"><img src={review.avatar} alt={review.reviewerName} className="size-11 rounded-full object-cover" /><div><h3 className="font-bold">{review.reviewerName}</h3><p className="text-xs text-muted-ink">★ {review.rating} · {new Date(review.reviewDate).toLocaleDateString()} · {review.verifiedPurchase ? "Verified purchase" : "Trade inquiry"}</p></div></div><p className="mt-3 text-sm leading-6 text-muted-ink">{review.comment}</p>{review.supplierReply&&<p className="mt-3 rounded-xl bg-primary-soft p-3 text-xs leading-5 text-primary">Supplier reply: {review.supplierReply}</p>}</article>)}
         </div>
       </section>
     </div>

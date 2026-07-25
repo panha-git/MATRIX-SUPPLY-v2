@@ -6,6 +6,7 @@ import { getCart, getNotifications, PLATFORM_CHANGED_EVENT } from "@/lib/localSt
 import { useAuth } from "./AuthProvider";
 import { Logo } from "./Logo";
 import { Icon } from "./Icon";
+import { ThemeToggle } from "./ThemeToggle";
 
 const guestLinks = [
   ["Search", "/products"],
@@ -45,15 +46,15 @@ export function SiteHeader() {
   const active = (href: string) => href !== "/" && !href.includes("#") && (pathname === href || pathname.startsWith(`${href}/`));
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-white/95 shadow-[0_1px_12px_rgba(17,43,74,.04)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-line bg-surface/95 shadow-[0_1px_12px_rgba(15,23,42,.04)] backdrop-blur-xl">
       <div className="container-shell flex h-[72px] items-center gap-3">
         <Link href="/" className="flex items-center gap-3">
           <Logo />
         </Link>
 
-        <div className="ml-2 flex flex-1 items-center gap-2 rounded-full border border-line bg-slate-50 px-3 py-2 shadow-sm">
+        <div className="ml-2 flex flex-1 items-center gap-2 rounded-full border border-line bg-surface-muted px-3 py-2 shadow-sm">
           <Icon name="search" size={16} />
-          <Link href="/products" className="flex-1 text-sm text-slate-600">
+          <Link href="/products" className="flex-1 text-sm text-muted-ink">
             Search products, suppliers, categories
           </Link>
         </div>
@@ -63,7 +64,7 @@ export function SiteHeader() {
             <Link
               key={label}
               href={href}
-              className={`rounded-full px-3 py-2 text-[13px] font-semibold ${active(href) ? "bg-primary-soft text-primary" : "text-slate-600 hover:bg-slate-50 hover:text-primary"}`}
+              className={`rounded-full px-3 py-2 text-[13px] font-semibold ${active(href) ? "bg-primary-soft text-primary" : "text-muted-ink hover:bg-primary-soft hover:text-primary"}`}
             >
               {label}
               {label === "Cart" && counts.cart > 0 && <span className="ml-1 text-accent">{counts.cart}</span>}
@@ -72,6 +73,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 xl:ml-2">
+          <ThemeToggle />
           {user ? (
             <>
               <div className="relative">
@@ -88,10 +90,10 @@ export function SiteHeader() {
                   )}
                 </button>
                 {noticeOpen && (
-                  <div className="absolute right-0 top-12 w-72 rounded-2xl border border-line bg-white p-3 shadow-2xl">
+                  <div className="absolute right-0 top-12 w-72 rounded-2xl border border-line bg-surface p-3 shadow-2xl">
                     <p className="px-2 py-2 text-sm font-bold">Notifications</p>
                     {getNotifications(user.id).slice(0, 3).map((n) => (
-                      <Link key={n.id} href={n.link || "/notifications"} onClick={() => setNoticeOpen(false)} className="block rounded-xl px-3 py-2.5 hover:bg-slate-50">
+                      <Link key={n.id} href={n.link || "/notifications"} onClick={() => setNoticeOpen(false)} className="block rounded-xl px-3 py-2.5 hover:bg-primary-soft">
                         <strong className="block text-xs">{n.title}</strong>
                         <span className="mt-1 line-clamp-2 text-[11px] text-muted-ink">{n.message}</span>
                       </Link>
@@ -105,7 +107,7 @@ export function SiteHeader() {
               <Link href="/account" className="hidden size-10 place-items-center rounded-full bg-primary text-xs font-bold text-white sm:grid">
                 {(user.role === "supplier" ? user.businessName : user.fullName).slice(0, 2).toUpperCase()}
               </Link>
-              <button onClick={logout} className="hidden text-xs font-semibold text-slate-500 hover:text-red-600 lg:block">
+              <button onClick={logout} className="hidden text-xs font-semibold text-muted-ink hover:text-red-600 lg:block">
                 Logout
               </button>
             </>

@@ -1,4 +1,4 @@
-# MATRIX SUPPLY
+# NEXXA
 
 A browser-only supplier marketplace demo built with Next.js App Router, React,
 TypeScript, Tailwind CSS, `localStorage`, and `sessionStorage`.

@@ -16,6 +16,7 @@ type IconName =
   | "leaf"
   | "mapPin"
   | "menu"
+  | "moon"
   | "package"
   | "plus"
   | "refresh"
@@ -115,6 +116,7 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M4 17h16" />
     </>
   ),
+  moon: <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 7 7 0 1 0 20 15.5Z" />,
   package: (
     <>
       <path d="m21 8-9 5-9-5 9-5Z" />

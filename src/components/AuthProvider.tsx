@@ -100,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         <div className="text-center">
           <span className="mx-auto block size-9 animate-pulse rounded-xl bg-primary" />
           <p className="mt-3 text-sm font-medium text-muted-ink">
-            Loading MATRIX SUPPLY…
+            Loading NEXXA…
           </p>
         </div>
       </main>

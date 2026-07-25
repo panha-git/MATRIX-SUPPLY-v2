@@ -86,7 +86,7 @@ export type ChatRoom = { id: string; customerId: string; customerName: string; s
 export type Message = { id: string; chatRoomId: string; senderId: string; senderName: string; senderRole: UserRole; receiverId: string; message: string; read: boolean; createdAt: string };
 export type Report = { id: string; reporterId: string; reporterName: string; targetType: "product" | "supplier" | "message" | "user"; targetId: string; reason: string; description?: string; status: "new" | "reviewed" | "resolved"; createdAt: string; updatedAt: string };
 
-const SESSION = "matrix-supply-cambodia:session";
+const SESSION = "nexxa-marketplace:session";
 const now = () => new Date().toISOString();
 const notifyChange = () => typeof window !== "undefined" && window.dispatchEvent(new Event(PLATFORM_CHANGED_EVENT));
 
@@ -133,7 +133,7 @@ export function loginOrCreateUser(gmail: string, profile?: RegistrationProfile) 
 }
 
 function createAccount(gmail: string, p: RegistrationProfile): LocalAccount {
-  if (!p.phoneNumber || !validateCambodianPhone(p.phoneNumber) || !p.phoneVerified) throw Error("Complete Cambodian phone verification.");
+  if (!p.phoneNumber || !validateCambodianPhone(p.phoneNumber) || !p.phoneVerified) throw Error("Complete phone verification.");
   if (!p.nationalId) throw Error("National ID information is required.");
   if (!p.fullName || !p.province) throw Error("Complete all required registration fields.");
   const t = now();

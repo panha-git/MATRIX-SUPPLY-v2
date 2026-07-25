@@ -1,5 +1,5 @@
-export const STORAGE_PREFIX = "matrix-supply-cambodia:";
-export const PLATFORM_CHANGED_EVENT = "matrix-supply-cambodia:changed";
+export const STORAGE_PREFIX = "nexxa-marketplace:";
+export const PLATFORM_CHANGED_EVENT = "nexxa-marketplace:changed";
 
 export function readLocal<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -19,7 +19,7 @@ export function makeId(prefix: string) {
 
 export function resetLocalAppStorage() {
   if (typeof window === "undefined") return;
-  Object.keys(localStorage).filter(k => k.startsWith(STORAGE_PREFIX) || k.startsWith("matrix-supply-v2:")).forEach(k => localStorage.removeItem(k));
+  Object.keys(localStorage).filter(k => k.startsWith(STORAGE_PREFIX) || k.startsWith("nexxa-v1:")).forEach(k => localStorage.removeItem(k));
   sessionStorage.clear();
   window.dispatchEvent(new Event(PLATFORM_CHANGED_EVENT));
 }

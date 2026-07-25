@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { AuthProvider } from "@/components/AuthProvider";
 import { MarketplaceProvider } from "@/components/MarketplaceProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geist = Geist({
@@ -10,9 +11,9 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "MATRIX SUPPLY | Local Supplier Marketplace",
+  title: "NEXXA | Structured Supplier Marketplace",
   description:
-    "A verified Cambodian marketplace for trusted customers and suppliers.",
+    "A structured digital marketplace connecting trusted customers and suppliers.",
 };
 
 export default function RootLayout({
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
       <body>
-        <AuthProvider>
-          <MarketplaceProvider>{children}</MarketplaceProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <MarketplaceProvider>{children}</MarketplaceProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

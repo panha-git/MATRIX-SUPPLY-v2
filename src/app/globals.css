@@ -1,15 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f6f8fb;
-  --foreground: #111c2f;
-  --primary: #112b4a;
-  --primary-dark: #091c33;
-  --primary-soft: #eaf0f7;
-  --accent: #07845c;
-  --accent-soft: #e7f7f1;
-  --muted: #637083;
-  --line: #dfe5ec;
+  --background: #f8fbff;
+  --foreground: #0f172a;
+  --primary: #2563eb;
+  --primary-dark: #0f172a;
+  --primary-soft: #eaf1ff;
+  --accent: #22c55e;
+  --accent-soft: #e9fbea;
+  --muted: #64748b;
+  --line: #dbe6f4;
+  --surface: #ffffff;
+  --surface-muted: #f1f6ff;
+}
+
+[data-theme="dark"] {
+  --background: #071225;
+  --foreground: #f8fbff;
+  --primary: #3b82f6;
+  --primary-dark: #ffffff;
+  --primary-soft: #10254a;
+  --accent: #22c55e;
+  --accent-soft: #0d3323;
+  --muted: #b6c3d6;
+  --line: #20324f;
+  --surface: #0f1d33;
+  --surface-muted: #111f38;
 }
 
 @theme inline {
@@ -21,6 +37,8 @@
   --color-accent: var(--accent);
   --color-muted-ink: var(--muted);
   --color-line: var(--line);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
   --font-sans: var(--font-geist-sans);
 }
 
@@ -65,7 +83,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-  outline: 3px solid rgba(17, 43, 74, 0.2);
+  outline: 3px solid color-mix(in srgb, var(--primary) 30%, transparent);
   outline-offset: 2px;
 }
 
@@ -85,8 +103,8 @@ img {
 .surface-card {
   border: 1px solid var(--line);
   border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 6px 24px rgba(17, 43, 74, 0.055);
+  background: var(--surface);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.055);
 }
 
 .form-control {
@@ -95,7 +113,7 @@ img {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 0.75rem;
-  background: #fbfcfe;
+  background: var(--surface-muted);
   padding-inline: 0.875rem;
   font-weight: 400;
   outline: none;
@@ -103,7 +121,7 @@ img {
 
 @layer components {
   .primary-btn { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg; }
-  .secondary-btn { @apply inline-flex items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-bold text-primary transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md; }
+  .secondary-btn { @apply inline-flex items-center justify-center rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-bold text-primary transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md; }
   .eyebrow { @apply inline-flex rounded-full bg-(--accent-soft) px-3 py-1 text-[11px] font-bold uppercase tracking-[.08em] text-(--accent); }
   .notice { @apply rounded-2xl border border-primary/10 bg-primary-soft p-5 text-sm leading-6 text-primary-dark; }
   .badge { @apply inline-flex rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary; }
@@ -112,8 +130,8 @@ img {
 }
 
 .form-control:focus {
-  border-color: rgba(17, 43, 74, 0.5);
-  background: #fff;
+  border-color: color-mix(in srgb, var(--primary) 55%, var(--line));
+  background: var(--surface);
 }
 
 textarea.form-control {
@@ -122,12 +140,12 @@ textarea.form-control {
 
 .soft-grid {
   background-image:
-    linear-gradient(rgba(23, 107, 58, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23, 107, 58, 0.035) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
-.card { border:1px solid var(--line); border-radius:20px; background:#fff; box-shadow:0 6px 24px rgba(17,43,74,.055); }
+.card { border:1px solid var(--line); border-radius:20px; background:var(--surface); box-shadow:0 6px 24px rgba(15,23,42,.055); }
 .page-header { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:32px; }
 .page-header h1 { margin-top:10px; font-size:clamp(2rem,4vw,2.75rem); line-height:1.08; font-weight:800; letter-spacing:-.035em; }
 .page-header p,.section-header p { margin-top:9px; max-width:680px; color:var(--muted); font-size:.925rem; line-height:1.65; }
@@ -142,13 +160,13 @@ textarea.form-control {
 .status-badge { display:inline-flex; border-radius:999px; padding:5px 10px; background:#eef2f6; color:#49586c; font-size:.68rem; font-weight:750; text-transform:capitalize; }
 .status-active,.status-accepted,.status-completed { background:var(--accent-soft); color:var(--accent); }
 .status-new { background:#eaf0f7; color:var(--primary); }.status-rejected,.status-cancelled,.status-removed,.status-suspended { background:#fff0f0;color:#c03939; }.status-inactive,.status-reviewed { background:#fff6df;color:#9a6811; }
-.empty-state { display:grid; min-height:310px; place-items:center; align-content:center; border:1px dashed #cbd4df; border-radius:20px; background:#fbfcfe; padding:36px; text-align:center; }
+.empty-state { display:grid; min-height:310px; place-items:center; align-content:center; border:1px dashed var(--line); border-radius:20px; background:var(--surface); padding:36px; text-align:center; }
 .empty-state>span { display:grid; width:54px; height:54px; place-items:center; border-radius:16px; background:var(--primary-soft); color:var(--primary); }.empty-state h2{margin-top:16px;font-weight:750}.empty-state p{margin:7px auto 20px;max-width:400px;color:var(--muted);font-size:.875rem;line-height:1.6}
 .loading-state { display:grid; min-height:280px; place-items:center; align-content:center; gap:14px; color:var(--muted); font-size:.875rem; }.loading-state i{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .form-section { border-bottom:1px solid var(--line); padding:26px 0; }.form-section:first-child{padding-top:0}.form-section:last-child{border-bottom:0;padding-bottom:0}.form-section>div:first-child h2{font-size:1rem;font-weight:750}.form-section>div:first-child p{margin-top:4px;color:var(--muted);font-size:.78rem;line-height:1.5}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
-.hover-card { transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease; }.hover-card:hover{transform:translateY(-3px);border-color:#cbd6e2;box-shadow:0 16px 36px rgba(17,43,74,.1)}
+.hover-card { transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease; }.hover-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb, var(--primary) 28%, var(--line));box-shadow:0 16px 36px rgba(15,23,42,.1)}
 .modal-backdrop { position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:20px; background:rgba(9,28,51,.66); backdrop-filter:blur(4px); animation:fade-in .16s ease; }
-.modal-card { width:min(100%,480px); border:1px solid var(--line); border-radius:24px; background:#fff; padding:28px; box-shadow:0 30px 80px rgba(9,28,51,.25); animation:scale-in .18s ease; }
+.modal-card { width:min(100%,480px); border:1px solid var(--line); border-radius:24px; background:var(--surface); padding:28px; box-shadow:0 30px 80px rgba(9,28,51,.25); animation:scale-in .18s ease; }
 @keyframes fade-in{from{opacity:0}}@keyframes scale-in{from{opacity:0;transform:scale(.97)}}
 
 .hide-scrollbar {

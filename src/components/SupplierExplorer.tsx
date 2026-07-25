@@ -79,7 +79,7 @@ export function SupplierExplorer() {
               </span>
             </div>
           </div>
-          <label className="flex h-12 w-full max-w-sm items-center gap-3 rounded-2xl border border-line bg-white px-4">
+          <label className="flex h-12 w-full max-w-sm items-center gap-3 rounded-2xl border border-line bg-surface px-4">
             <Icon name="search" size={18} className="text-muted-ink" />
             <input
               value={search}

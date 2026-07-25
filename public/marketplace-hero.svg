@@ -4,62 +4,66 @@
   role="img"
   aria-labelledby="title description"
 >
-  <title id="title">Fresh local marketplace illustration</title>
+  <title id="title">NEXXA structured marketplace illustration</title>
   <desc id="description">
-    Abstract baskets of colorful produce on a deep green market background.
+    A deep navy and royal blue structured path illustration representing a connected supplier marketplace.
   </desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0e4d2b" />
-      <stop offset="1" stop-color="#082f1e" />
+      <stop offset="0" stop-color="#0f172a" />
+      <stop offset="1" stop-color="#071225" />
     </linearGradient>
     <radialGradient id="light">
-      <stop offset="0" stop-color="#8ee4aa" stop-opacity=".32" />
-      <stop offset="1" stop-color="#8ee4aa" stop-opacity="0" />
+      <stop offset="0" stop-color="#2563eb" stop-opacity=".34" />
+      <stop offset="1" stop-color="#2563eb" stop-opacity="0" />
     </radialGradient>
   </defs>
   <rect width="1200" height="900" fill="url(#background)" />
-  <circle cx="960" cy="140" r="440" fill="url(#light)" />
-  <circle cx="150" cy="760" r="390" fill="url(#light)" />
-  <g opacity=".15" stroke="#fff" stroke-width="2">
+  <circle cx="940" cy="150" r="430" fill="url(#light)" />
+  <circle cx="160" cy="780" r="360" fill="url(#light)" />
+  <g opacity=".18" stroke="#ffffff" stroke-width="2">
     <path d="M0 180h1200M0 360h1200M0 540h1200M0 720h1200" />
     <path d="M200 0v900M400 0v900M600 0v900M800 0v900M1000 0v900" />
   </g>
-  <g transform="translate(300 165)">
-    <path d="M80 245h440l-55 330H135Z" fill="#c47a35" />
+  <g transform="translate(330 145)">
     <path
-      d="M105 280h390M95 350h390M85 420h390M75 490h390"
-      stroke="#8f5224"
-      stroke-width="18"
-    />
-    <path
-      d="M170 245c20-170 260-170 280 0"
+      d="M270 20 506 156v272L270 564 34 428V156Z"
       fill="none"
-      stroke="#e0a66d"
-      stroke-width="30"
+      stroke="#2563eb"
+      stroke-width="34"
+      stroke-linejoin="round"
     />
-    <g stroke="#f5f7e9" stroke-width="10">
-      <circle cx="165" cy="240" r="70" fill="#ef6a22" />
-      <circle cx="285" cy="205" r="78" fill="#f3bc3f" />
-      <circle cx="415" cy="245" r="72" fill="#d73f38" />
-      <circle cx="240" cy="300" r="70" fill="#77b942" />
-      <circle cx="365" cy="315" r="76" fill="#ee8f2d" />
-    </g>
-    <g fill="#176b3a">
-      <path d="M145 175c-40-68-4-114 64-107-5 65-26 102-64 107Z" />
-      <path d="M394 177c23-78 75-91 125-46-39 51-77 69-125 46Z" />
-      <path d="M268 126c-10-77 36-109 99-83-21 59-52 87-99 83Z" />
+    <path
+      d="M145 374V167l250 160V181"
+      fill="none"
+      stroke="#60a5fa"
+      stroke-width="42"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M145 170 395 330"
+      fill="none"
+      stroke="#ffffff"
+      stroke-width="18"
+      stroke-linecap="round"
+      opacity=".18"
+    />
+    <g fill="#22c55e">
+      <circle cx="34" cy="156" r="10" />
+      <circle cx="506" cy="156" r="10" />
+      <circle cx="270" cy="564" r="10" />
     </g>
   </g>
   <g
     fill="#fff"
-    opacity=".7"
+    opacity=".86"
     font-family="Arial, sans-serif"
     text-anchor="middle"
   >
-    <text x="600" y="790" font-size="42" font-weight="700">
-      LOCAL SUPPLIERS · USEFUL PRODUCTS
+    <text x="600" y="790" font-size="42" font-weight="800" letter-spacing="5">
+      STRUCTURED SUPPLIER MARKETPLACE
     </text>
-    <text x="600" y="840" font-size="24">MATRIX SUPPLY</text>
+    <text x="600" y="842" font-size="26" letter-spacing="12">NEXXA</text>
   </g>
 </svg>

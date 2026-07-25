@@ -7,5 +7,5 @@ export function PageHeader({ eyebrow, title, description, actions }: { eyebrow?:
 export function SectionHeader({ title, description, action }: { title: string; description?: string; action?: React.ReactNode }) {
   return <div className="section-header"><div><h2>{title}</h2>{description && <p>{description}</p>}</div>{action}</div>;
 }
-export function VerifiedBadge({ children = "Verified Cambodian Supplier" }: { children?: React.ReactNode }) { return <span className="verified-badge"><Icon name="check" size={12}/>{children}</span>; }
+export function VerifiedBadge({ children = "Verified NEXXA Supplier" }: { children?: React.ReactNode }) { return <span className="verified-badge"><Icon name="check" size={12}/>{children}</span>; }
 export function EmptyState({ icon = "package", title, description, actionLabel, href }: { icon?: "package"|"cart"|"store"|"headset"; title: string; description: string; actionLabel?: string; href?: string }) { return <div className="empty-state"><span><Icon name={icon}/></span><h2>{title}</h2><p>{description}</p>{actionLabel && href && <Link href={href} className="primary-btn">{actionLabel}</Link>}</div>; }
