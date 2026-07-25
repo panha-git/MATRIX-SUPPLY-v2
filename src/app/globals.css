@@ -75,6 +75,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -82,6 +83,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 button,
@@ -209,11 +211,12 @@ textarea.form-control {
 
 @media (max-width: 640px) {
   .container-shell {
-    width: min(100% - 28px, 1320px);
+    width: min(100% - 24px, 1320px);
   }
 
   .page-pad {
-    padding-block: 32px 52px;
+    padding-block: 28px 48px;
   }
+  .primary-btn,.secondary-btn,.ghost-btn,.danger-btn { min-height:44px; }
   .page-header,.section-header { align-items:flex-start; flex-direction:column; }.page-actions,.page-actions>*{width:100%}.form-grid{grid-template-columns:1fr}
 }

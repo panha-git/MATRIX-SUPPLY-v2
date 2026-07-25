@@ -86,19 +86,19 @@ export function ProductsExplorer() {
 
   return (
     <div className="container-shell page-pad pb-14">
-      <div className="mb-6 rounded-[28px] border border-line bg-surface p-4 shadow-[0_8px_30px_rgba(17,43,74,.04)] sm:p-5">
+      <div className="mb-4 rounded-2xl border border-line bg-surface p-3 shadow-[0_8px_30px_rgba(17,43,74,.04)] sm:mb-6 sm:rounded-[28px] sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[.16em] text-accent">NEXXA</p>
-            <h1 className="mt-1 text-2xl font-black tracking-[-.03em] text-primary">Marketplace feed</h1>
-            <p className="mt-1 text-sm text-muted-ink">Browse live wholesale products from verified suppliers across the supplier network.</p>
+            <h1 className="mt-1 text-xl font-black tracking-[-.03em] text-primary sm:text-2xl">Marketplace feed</h1>
+            <p className="mt-1 text-xs leading-5 text-muted-ink sm:text-sm">Browse live wholesale products from verified suppliers across the supplier network.</p>
           </div>
-          <div className="rounded-full border border-line bg-surface-muted px-3 py-1.5 text-sm font-semibold text-primary">
+          <div className="rounded-full border border-line bg-surface-muted px-2.5 py-1.5 text-xs font-semibold text-primary sm:px-3 sm:text-sm">
             {visible.length} live listings
           </div>
         </div>
 
-        <div className="mt-4 grid gap-3 md:grid-cols-[minmax(220px,1fr)_repeat(3,minmax(150px,auto))]">
+        <div className="mt-4 grid gap-2 sm:gap-3 md:grid-cols-[minmax(220px,1fr)_repeat(3,minmax(150px,auto))]">
           <label className="flex h-11 items-center gap-2 rounded-xl border border-line bg-surface px-3">
             <span className="text-muted-ink">⌕</span>
             <input value={search} onChange={(e) => { setSearch(e.target.value); setVisibleCount(20); }} placeholder="Search products or suppliers" className="min-w-0 flex-1 bg-transparent text-sm outline-none" />
@@ -152,7 +152,7 @@ export function ProductsExplorer() {
         </div>
       )}
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
         {feed.map((p) => (
           <ProductCard key={p.id} product={p} onAddToCart={add} onRequestQuote={chat} onChat={chat} onReport={openReport} />
         ))}
