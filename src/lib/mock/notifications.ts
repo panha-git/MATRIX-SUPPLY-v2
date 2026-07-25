@@ -50,11 +50,12 @@ export function getMockNotifications(userId: string): MockNotification[] {
 
   return Array.from({ length: 20 }, (_, index) => {
     const template = templates[index % templates.length];
+    const qualifiers = ["Phnom Penh", "Siem Reap", "Battambang", "Kampot", "Kandal", "Sihanoukville"];
     return {
       id: `notif_${String(index + 1).padStart(3, "0")}`,
       userId,
-      title: `${template.title} ${index + 1}`,
-      message: `${template.message} ${index % 2 === 0 ? "Buyer activity is climbing." : "The marketplace is moving quickly."}`,
+      title: `${template.title} · ${qualifiers[index % qualifiers.length]}`,
+      message: `${template.message} ${index % 2 === 0 ? "Buyer activity is climbing across related listings." : "Several comparable suppliers updated stock this morning."}`,
       type: template.type,
       read: index % 4 === 0,
       createdAt: new Date(Date.now() - index * 1000 * 60 * 18).toISOString(),

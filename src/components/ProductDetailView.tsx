@@ -15,6 +15,8 @@ import {
   type SupplierAccount,
   startChat,
 } from "@/lib/localStorage";
+import { getMockProductById } from "@/lib/mock/products";
+import { getMockReviews } from "@/lib/mock/reviews";
 import { Icon } from "./Icon";
 import { useMarketplace } from "./MarketplaceProvider";
 
@@ -50,6 +52,8 @@ export function ProductDetailView({ productId }: { productId: string }) {
     if (!product) return [];
     return products.filter((item) => item.id !== product.id && item.category === product.category).slice(0, 4);
   }, [product, products]);
+  const rich = product ? getMockProductById(product.id) : null;
+  const reviews = product ? getMockReviews(product.id).slice(0, 5) : [];
 
   if (product === undefined) {
     return <div className="container-shell page-pad"><div className="loading-state"><i/><p>Loading product information…</p></div></div>;
@@ -108,14 +112,17 @@ export function ProductDetailView({ productId }: { productId: string }) {
             }}
             className="aspect-[4/3] w-full rounded-[28px] border border-line bg-white object-cover shadow-[0_16px_40px_rgba(17,43,74,.08)]"
           />
+          {rich && <div className="mt-4 grid grid-cols-3 gap-3">
+            {rich.images.slice(1, 4).map((image) => <img key={image} src={image} alt={product.title} className="aspect-[4/3] rounded-2xl border border-line object-cover" />)}
+          </div>}
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-line bg-[#f8fafc] p-4">
               <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-500">Lead time</p>
-              <p className="mt-2 text-sm font-bold text-primary">Ready to ship in 24–48 hours</p>
+              <p className="mt-2 text-sm font-bold text-primary">{rich?.leadTime || "Ready to ship in 24-48 hours"}</p>
             </div>
             <div className="rounded-2xl border border-line bg-[#f8fafc] p-4">
               <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-500">MOQ</p>
-              <p className="mt-2 text-sm font-bold text-primary">Flexible wholesale quantities</p>
+              <p className="mt-2 text-sm font-bold text-primary">MOQ {rich?.MOQ || "flexible"} · {rich?.packagingInformation.split(",")[0] || "wholesale packing"}</p>
             </div>
           </div>
         </div>
@@ -131,9 +138,19 @@ export function ProductDetailView({ productId }: { productId: string }) {
           <dl className="mt-6 grid grid-cols-2 gap-3 text-sm">
             <Detail label="Stock quantity" value={String(product.stockQuantity)} />
             <Detail label="Location" value={product.province} />
-            <Detail label="Supplier rating" value={supplier?.trustScore ? `${supplier.trustScore}%` : "Verified"} />
-            <Detail label="Response rate" value="98%" />
+            <Detail label="Supplier rating" value={rich ? `${rich.rating} / 5 from ${rich.reviewCount} reviews` : supplier?.trustScore ? `${supplier.trustScore}%` : "Verified"} />
+            <Detail label="Delivery estimate" value={rich?.estimatedDelivery || "3-5 days"} />
+            <Detail label="Warehouse" value={rich?.warehouseLocation || product.locationDetails} />
+            <Detail label="Buyer interest" value={`${rich?.views.toLocaleString() || "9,800"} views · ${rich?.favouriteCount || 205} saved`} />
           </dl>
+          {rich && <section className="mt-6 rounded-2xl border border-line bg-white p-5">
+            <h2 className="font-bold">Specifications and packing</h2>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              {Object.entries(rich.specifications).map(([key, value]) => <Detail key={key} label={key.replaceAll("_", " ")} value={value} />)}
+            </div>
+            <p className="mt-4 text-sm leading-6 text-muted-ink">{rich.packagingInformation}</p>
+            <div className="mt-3 flex flex-wrap gap-2">{rich.tags.map((tag) => <span key={tag} className="badge">{tag}</span>)}</div>
+          </section>}
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <button onClick={addProduct} disabled={product.stockQuantity === 0} className="primary-btn py-3.5 disabled:bg-slate-300"><Icon name="cart" size={17} /> Add to cart</button>
             <button onClick={requestQuote} className="secondary-btn py-3.5">Chat with Supplier</button>
@@ -158,6 +175,12 @@ export function ProductDetailView({ productId }: { productId: string }) {
           {relatedProducts.map((item)=><Link key={item.id} href={`/products/${item.id}`} className="rounded-2xl border border-line bg-white p-4 hover:border-primary/30 hover:shadow-sm"><p className="text-sm font-semibold text-primary">{item.title}</p><p className="mt-2 text-sm text-muted-ink">{item.category}</p><p className="mt-3 text-lg font-black text-primary">${item.price.toFixed(2)}</p></Link>)}
         </div>
       </section>}
+      <section className="mt-12">
+        <SectionHeading title="Recent buyer reviews" description="Verified procurement notes from restaurants, retailers, and project teams." />
+        <div className="mt-5 grid gap-4 lg:grid-cols-2">
+          {reviews.map((review) => <article key={`${review.reviewerName}-${review.reviewDate}`} className="rounded-2xl border border-line bg-white p-5"><div className="flex items-start gap-3"><img src={review.avatar} alt={review.reviewerName} className="size-11 rounded-full object-cover" /><div><h3 className="font-bold">{review.reviewerName}</h3><p className="text-xs text-muted-ink">★ {review.rating} · {new Date(review.reviewDate).toLocaleDateString()} · {review.verifiedPurchase ? "Verified purchase" : "Trade inquiry"}</p></div></div><p className="mt-3 text-sm leading-6 text-muted-ink">{review.comment}</p>{review.supplierReply&&<p className="mt-3 rounded-xl bg-primary-soft p-3 text-xs leading-5 text-primary">Supplier reply: {review.supplierReply}</p>}</article>)}
+        </div>
+      </section>
     </div>
   );
 }

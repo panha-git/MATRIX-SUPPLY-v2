@@ -453,7 +453,7 @@ export function seedDemoData() {
       createdAt: t,
       updatedAt: t,
       businessName: supplier.companyName,
-      businessCategory: PRODUCT_CATEGORIES[index % PRODUCT_CATEGORIES.length],
+      businessCategory: supplier.businessCategory || PRODUCT_CATEGORIES[index % PRODUCT_CATEGORIES.length],
       businessDescription: supplier.businessDescription,
       businessLogoUrl: supplier.logo,
       businessProvince: supplier.province,
@@ -492,8 +492,8 @@ export function seedDemoData() {
   );
 
   const mockProducts = getMockProducts().map((product, index) => {
-    const supplier = suppliers[index % suppliers.length] as SupplierAccount;
-    const unit = index % 3 === 0 ? "per kg" : index % 3 === 1 ? "per box" : "per pack";
+    const supplier = suppliers.find((item) => item.id === product.supplierId) || (suppliers[index % suppliers.length] as SupplierAccount);
+    const unit = product.packagingInformation.split(",")[0] || (index % 3 === 0 ? "per kg" : index % 3 === 1 ? "per box" : "per pack");
     return {
       id: product.id,
       supplierId: supplier.id,
@@ -540,3 +540,9 @@ export function seedDemoData() {
 }
 
 export const resetDemoData = resetLocalAppStorage;
+
+export function ensureDemoData() {
+  if (typeof window === "undefined") return;
+  const meta = readLocal<{ productsCount?: number } | null>("marketplaceMeta", null);
+  if (!meta?.productsCount || getProducts().length < 100 || getSuppliers().length < 50) seedDemoData();
+}

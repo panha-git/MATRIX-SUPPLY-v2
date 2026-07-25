@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   AUTH_CHANGED_EVENT,
+  ensureDemoData,
   getCurrentUser,
   loginOrCreateUser,
   logout as clearSession,
@@ -20,10 +21,10 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const customerOnlyRoutes = ["/cart", "/checkout"];
+const customerOnlyRoutes = ["/checkout"];
 const supplierOnlyRoutes = ["/dashboard"];
 const adminOnlyRoutes = ["/admin"];
-const signedInRoutes = ["/account", "/orders", "/chat", "/notifications"];
+const signedInRoutes = ["/account", "/orders"];
 
 function isWithin(pathname: string, routes: string[]) {
   return routes.some(
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<LocalAccount | null | undefined>(undefined);
 
   useEffect(() => {
+    ensureDemoData();
     const syncUser = () => setUser(getCurrentUser());
     syncUser();
     window.addEventListener(AUTH_CHANGED_EVENT, syncUser);

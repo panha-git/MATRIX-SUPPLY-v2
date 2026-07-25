@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   CARTS_CHANGED_EVENT,
   getCart,
+  getActiveProducts,
   removeCartItem,
   setCartItemQuantity,
   type CartItem,
@@ -20,8 +21,8 @@ export function CartView() {
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    if (user?.role !== "customer") return;
-    const sync = () => setItems(getCart(user.id).items);
+    const demoItems = () => getActiveProducts().slice(0, 4).map((product, index) => ({ productId: product.id, supplierId: product.supplierId, supplierName: product.supplierName, title: product.title, price: product.price, unit: product.unit, quantity: index + 2, imageUrl: product.imageUrl }));
+    const sync = () => setItems(user?.role === "customer" ? getCart(user.id).items : demoItems());
     sync();
     window.addEventListener(CARTS_CHANGED_EVENT, sync);
     window.addEventListener("storage", sync);
@@ -31,17 +32,18 @@ export function CartView() {
     };
   }, [user]);
 
-  if (!user || user.role !== "customer") return null;
   const total = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
 
   const changeQuantity = (item: CartItem, quantity: number) => {
+    if (!user || user.role !== "customer") return notify("Sign in to adjust this procurement cart");
     setCartItemQuantity(user.id, item.productId, quantity);
   };
 
   const remove = (item: CartItem) => {
+    if (!user || user.role !== "customer") return notify("Sign in to save cart changes");
     removeCartItem(user.id, item.productId);
     notify(`${item.title} removed from your cart`);
   };
@@ -144,10 +146,10 @@ export function CartView() {
               </strong>
             </div>
             <Link
-              href="/checkout"
+              href={user?.role === "customer" ? "/checkout" : "/login"}
             className="primary-btn block py-3.5 text-center"
             >
-              Continue to order request
+              {user?.role === "customer" ? "Continue to order request" : "Sign in to submit order request"}
             </Link>
             <p className="mt-3 text-center text-[11px] leading-5 text-muted-ink">
               This submits an order request directly to each supplier. No online payment is collected.
