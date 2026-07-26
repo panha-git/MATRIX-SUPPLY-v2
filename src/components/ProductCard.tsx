@@ -5,14 +5,14 @@ import Link from "next/link";
 import type { Product } from "@/lib/localStorage";
 import { getMockProductById } from "@/lib/mock/products";
 import { Icon } from "./Icon";
-import { VerifiedBadge } from "./ui";
+// import { VerifiedBadge } from "./ui";
 
 export function ProductCard({
   product,
   onAddToCart,
   onRequestQuote,
   onChat,
-  onReport,
+  // onReport,
 }: {
   product: Product;
   onAddToCart: (product: Product) => void;
@@ -45,9 +45,9 @@ export function ProductCard({
       </Link>
 
       <div className="flex flex-1 flex-col p-2.5 sm:p-4 lg:p-5">
-        <div className="hidden sm:block">
+        {/* <div className="hidden sm:block">
           <VerifiedBadge>Verified Supplier</VerifiedBadge>
-        </div>
+        </div> */}
         <Link
           href={`/products/${product.id}`}
           className="line-clamp-2 text-[12px] font-bold leading-4 text-foreground hover:text-primary sm:mt-3 sm:text-[15px] sm:leading-5"
@@ -106,11 +106,11 @@ export function ProductCard({
           </button>
         </div>
 
-        {onReport && (
+        {/* {onReport && (
           <button onClick={() => onReport(product)} className="danger-btn mt-1.5 min-h-9 justify-start px-2 py-1.5 text-[10px] sm:mt-3 sm:min-h-0 sm:text-[11px]">
             Report Product
           </button>
-        )}
+        )} */}
       </div>
     </article>
   );
